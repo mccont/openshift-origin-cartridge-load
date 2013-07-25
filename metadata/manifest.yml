@@ -2,7 +2,7 @@ Name: python
 Cartridge-Short-Name: PYTHON
 Display-Name: Python 2.6
 Description: "Python is a general-purpose, high-level programming language whose design philosophy emphasizes code readability. Popular development frameworks include: Django, Bottle, Pylons, Zope and TurboGears."
-Version: '2.6'
+Version: '2.7'
 Versions: ['2.6', '2.7', '3.3']
 License: "The Python License, version 2.6"
 License-Url: http://docs.python.org/3/license.html
