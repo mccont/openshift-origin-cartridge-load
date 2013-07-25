@@ -1,0 +1,13 @@
+#!/bin/bash -e
+
+source $OPENSHIFT_CARTRIDGE_SDK_BASH
+source $OPENSHIFT_PYTHON_DIR/lib/util
+
+case $1 in
+    update-configuration)
+        update-configuration $OPENSHIFT_PYTHON_VERSION
+        ;;
+    *)
+        exec $OPENSHIFT_PYTHON_DIR/versions/$OPENSHIFT_PYTHON_VERSION/bin/control "$@"
+        ;;
+esac
