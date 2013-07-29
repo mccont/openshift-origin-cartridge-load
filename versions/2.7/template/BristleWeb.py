@@ -79,7 +79,7 @@ def parsefile(infile,outfile,vars):
       (realhost,hostport) = host.split(':')
 
       global activehostname
-      activehostname = " %s, Port: %s, User: %s, Password: %s" % (realhost,hostport,user,password)
+      activehostname = " %s, Port: %s" % (realhost,hostport)
 
       f = open(infile,'r')
       o = open(outfile,'w')
@@ -183,8 +183,6 @@ def parselog():
             writes = int(float(updates) + float(deletes) + float(inserts))
             realtime = re.match(r'\d+\s+INFO\s+(\d+)',time)
 
-            print "R: ",reads, " W: ",writes
-            
             seconds = int(int(realtime.group(1))/1000)
 
             if seconds in allreads:
@@ -194,21 +192,27 @@ def parselog():
                 allreads[seconds] = reads
                 allwrites[seconds] = writes
 
-def logasjson():
+def logasjson(skipstart):
     outputcount = 0
     basecounter = 0
     reads = []
     writes = []
     global currmsg
     global allreads,allwrites
+    windowsize = 150
 
     od = collections.OrderedDict(sorted(allreads.items()))
 
     for rec in od.iteritems():
-        (seconds,readval) = rec
-        reads.append([seconds,allreads[seconds]])
-        writes.append([seconds,allwrites[seconds]])
-        outputcount = outputcount+1
+          basecounter = basecounter+1
+          if basecounter <= skipstart: 
+                continue
+          (seconds,readval) = rec
+          reads.append([(seconds*1000),allreads[seconds]])
+          writes.append([(seconds*1000),allwrites[seconds]])
+          outputcount = outputcount+1
+          if outputcount >= windowsize:
+                break
 
     if (outputcount > 0):
           currmsg = 'Displaying data'
@@ -251,7 +255,7 @@ class BristleWeb(SimpleHTTPRequestHandler):
                    self.send_response(200)
                    self.send_header('Content-type', 'application/json')
                    self.end_headers()
-                   self.wfile.write(logasjson())
+                   self.wfile.write(logasjson(int(qs['skip'][0])))
 
              if qs['m'] == ['start']:
                    vars = { 'host' : 'localhost:3306',

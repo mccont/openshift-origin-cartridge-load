@@ -1,10 +1,10 @@
-+ java -cp './bristlecone/bin/../lib/ApacheJMeter_core.jar:./bristlecone/bin/../lib/ApacheJMeter_java.jar:./bristlecone/bin/../lib/bristlecone.jar:./bristlecone/bin/../lib/classes12.jar:./bristlecone/bin/../lib/commons-logging.jar:./bristlecone/bin/../lib/dom4j-1.6.1.jar:./bristlecone/bin/../lib/jcommon-1.0.15.jar:./bristlecone/bin/../lib/jfreechart-1.0.12.jar:./bristlecone/bin/../lib/jline-0.9.94.jar:./bristlecone/bin/../lib/junit.jar:./bristlecone/bin/../lib/log4j.jar:./bristlecone/bin/../lib/logkit-1.2.jar:./bristlecone/bin/../lib/mysql-connector-java-5.1.16.jar:./bristlecone/bin/../lib/tungsten-common-src.jar:./bristlecone/bin/../lib/tungsten-common.jar:./bristlecone/bin/../lib-ext/derby.jar:./bristlecone/bin/../lib-ext/drizzle-jdbc-0.9-SNAPSHOT.jar:./bristlecone/bin/../lib-ext/hsqldb.jar:./bristlecone/bin/../lib-ext/postgresql-8.4-702.jdbc3.jar:./bristlecone/bin/../lib-ext/tungsten-fsm-src.jar:./bristlecone/bin/../lib-ext/tungsten-fsm.jar:./bristlecone/bin/../../tungsten-connector/lib/*.jar:./bristlecone/bin/../config:./bristlecone/bin/../../cluster-home/conf:./bristlecone/bin/../config' -Dwrapper.java.pid=69343 -Dtungsten.router.name=evaluator -Drouter.properties=./bristlecone/bin/../config/router.properties -Djava.net.preferIPv4Stack=true com.continuent.bristlecone.evaluator.Evaluator create_tables.xml
-17:03:33,219 INFO  Database initialization starting
-17:03:38,462 ERROR SQL error: Unknown table 'ta3'
-17:03:38,477 ERROR SQL error: Unknown table 'ta1'
-17:03:38,487 ERROR SQL error: Unknown table 'ta2'
-17:03:38,521 INFO  Database initialization complete
++ java -cp './bristlecone/bin/../lib/ApacheJMeter_core.jar:./bristlecone/bin/../lib/ApacheJMeter_java.jar:./bristlecone/bin/../lib/bristlecone.jar:./bristlecone/bin/../lib/classes12.jar:./bristlecone/bin/../lib/commons-logging.jar:./bristlecone/bin/../lib/dom4j-1.6.1.jar:./bristlecone/bin/../lib/jcommon-1.0.15.jar:./bristlecone/bin/../lib/jfreechart-1.0.12.jar:./bristlecone/bin/../lib/jline-0.9.94.jar:./bristlecone/bin/../lib/junit.jar:./bristlecone/bin/../lib/log4j.jar:./bristlecone/bin/../lib/logkit-1.2.jar:./bristlecone/bin/../lib/mysql-connector-java-5.1.16.jar:./bristlecone/bin/../lib/tungsten-common-src.jar:./bristlecone/bin/../lib/tungsten-common.jar:./bristlecone/bin/../lib-ext/derby.jar:./bristlecone/bin/../lib-ext/drizzle-jdbc-0.9-SNAPSHOT.jar:./bristlecone/bin/../lib-ext/hsqldb.jar:./bristlecone/bin/../lib-ext/postgresql-8.4-702.jdbc3.jar:./bristlecone/bin/../lib-ext/tungsten-fsm-src.jar:./bristlecone/bin/../lib-ext/tungsten-fsm.jar:./bristlecone/bin/../../tungsten-connector/lib/*.jar:./bristlecone/bin/../config:./bristlecone/bin/../../cluster-home/conf:./bristlecone/bin/../config' -Dwrapper.java.pid=75790 -Dtungsten.router.name=evaluator -Drouter.properties=./bristlecone/bin/../config/router.properties -Djava.net.preferIPv4Stack=true com.continuent.bristlecone.evaluator.Evaluator create_tables.xml
+18:39:00,113 INFO  Database initialization starting
+18:39:05,365 ERROR SQL error: Unknown table 'ta3'
+18:39:05,381 ERROR SQL error: Unknown table 'ta1'
+18:39:05,389 ERROR SQL error: Unknown table 'ta2'
+18:39:05,434 INFO  Database initialization complete
 GC started
-17:03:43,582 INFO  ############################ Starting test run ############################
-17:03:44,584 INFO  1375113824584 1/1 1.116 ops/sec 0 ms/op 676 rows/select 0 updates 0 deletes 0 inserts
-17:03:44,590 INFO  Test run complete
+18:39:10,494 INFO  ############################ Starting test run ############################
+18:39:11,496 INFO  1375119551496 1/1 1.113 ops/sec 0 ms/op 673 rows/select 0 updates 0 deletes 0 inserts
+18:39:11,502 INFO  Test run complete

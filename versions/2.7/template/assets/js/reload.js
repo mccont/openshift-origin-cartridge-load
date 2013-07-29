@@ -3,7 +3,7 @@ var iteration = 0;
 
 function refresh() {
 
-    url = '?m=load&_=' + iteration++;
+    url = '?m=load&skip=' + skipstart + '&_=' + iteration++;
 
     $.getJSON(url, function(data, textStatus, jqxhr) {
             console.log(new Date() + " Loaded data " + data.counter + " :"+ textStatus + " " + jqxhr.status);
@@ -19,10 +19,10 @@ function refresh() {
             var m4_write_a={data: data.writes, color: '#3399FF', label: 'Writes'};
             var plot1=[m4_read_a,m4_write_a,];
             var options1 = {
-                xaxis: { mode: "time", ticks: 6, timeformat: "%H:%M:%S", color: "#cccccc" },
-                yaxis: { min: 0, color: "#FFFFFF" },
+                xaxis: { mode: "time", ticks: 6, timeformat: "%H:%M:%S", color: "#555555" },
+                yaxis: { min: 0, color: "#555555" },
                 grid: { hoverable: true, clickable: true, aboveData: false },
-                legend: { position: "sw", backgroundOpacity: 0, margin: 4, color: "#cccccc"  }
+                legend: { position: "sw", backgroundOpacity: 0, margin: 4, color: "#ffffff"  }
 	    };
 
             $.plot($("#plot1"),plot1, options1);
@@ -66,7 +66,8 @@ function startload() {
                               'deletes' : $('#wdeletes').val(),
                               'updates' : $('#wupdates').val(),
                  },
-              
+             'core' : { 'testDuration' : $('#duration').val(),
+             },
     };
 
     url = '?m=start&vars=' + encodeURIComponent(JSON.stringify(vars));
