@@ -1,0 +1,16 @@
+<!DOCTYPE EvaluatorConfiguration SYSTEM "file://../xml/evaluator.dtd">
+<EvaluatorConfiguration name="readwrite" testDuration="1200"
+    autoCommit="false" statusInterval="500" htmlFile="readonlyResults.html" separator=" ">
+
+    <DataSource name="s1" driver="com.mysql.jdbc.Driver"
+        url="jdbc:mysql://cont-db1:3306/evaluator@qos=RO_RELAXED&amp;autoReconnect=true"
+        user="app_user"
+        password="password"/>
+
+    <TableGroup name="ta" size="100" dataSource="s1" initializeDDL="false">
+        <ThreadGroup name="A" dataSource="s1" threadCount="10" thinkTime="10"
+            readSize="1000"
+            rampUpInterval="30" rampUpIncrement="2" reconnectInterval="10" />
+    </TableGroup>
+</EvaluatorConfiguration>
+

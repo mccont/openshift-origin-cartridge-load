@@ -1,0 +1,17 @@
+<!DOCTYPE EvaluatorConfiguration SYSTEM "file://../xml/evaluator.dtd">
+
+<!-- To be run before a read-only session to create needed table structure on the master -->
+
+<EvaluatorConfiguration name="tungsten" testDuration="1"
+        autoCommit="false" statusInterval="500" htmlFile="tablescreate.html">
+    <DataSource name="s1" driver="com.mysql.jdbc.Driver"
+        url="jdbc:mysql://192.168.1.70:9999/evaluator@qos=RW_STRICT&amp;createDatabaseIfNotExist=true&amp;autoReconnect=true"
+        user="app_user"
+        password="secret"/>
+
+    <TableGroup name="ta" size="1" dataSource="s1">
+        <ThreadGroup dataSource="s1" name="A" threadCount="1" thinkTime="0" />
+    </TableGroup>
+
+</EvaluatorConfiguration>
+

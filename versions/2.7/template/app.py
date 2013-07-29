@@ -2,6 +2,11 @@
 import imp
 import os
 import sys
+from BristleWeb import *
+import SocketServer
+from SimpleHTTPServer import SimpleHTTPRequestHandler
+import time
+import socket
 
 try:
    zvirtenv = os.path.join(os.environ['OPENSHIFT_PYTHON_DIR'],
@@ -11,14 +16,10 @@ except IOError:
    pass
 
 
-def run_gevent_server(app, ip, port=8080):
-   from gevent.pywsgi import WSGIServer
-   WSGIServer((ip, port), app).serve_forever()
-
-
-def run_simple_httpd_server(app, ip, port=8080):
-   from wsgiref.simple_server import make_server
-   make_server(ip, port, app).serve_forever()
+def run_simple_httpd_server(ip, port=8080):
+   httpd = SocketServer.TCPServer((str(ip), int(port)), BristleWeb)
+   print "serving at port", port, "IP ",ip
+   httpd.serve_forever()   
 
 
 #
@@ -36,10 +37,14 @@ if __name__ == '__main__':
    zapp = imp.load_source('application', 'wsgi/application')
 
    #  Use gevent if we have it, otherwise run a simple httpd server.
-   print 'Starting WSGIServer on %s:%d ... ' % (ip, port)
-   try:
-      run_gevent_server(zapp.application, ip, port)
-   except:
-      print 'gevent probably not installed - using default simple server ...'
-      run_simple_httpd_server(zapp.application, ip, port)
+   print 'Starting SimpleHTTPServer on %s:%d ... ' % (ip, port)
+   try: 
+       run_simple_httpd_server(ip, port)
+   except socket.error: 
+       print "Socket in use; waiting until it should be free"
+       time.sleep(15)
+   except: 
+       pass
+   else: 
+       pass
 

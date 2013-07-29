@@ -1,0 +1,15 @@
+<!DOCTYPE EvaluatorConfiguration SYSTEM "file://../xml/evaluator.dtd">
+<EvaluatorConfiguration name="postgres" testDuration="1200"
+	autoCommit="true" statusInterval="2" xmlFile="postgresResults.xml">
+	<Database driver="org.postgresql.Driver" 
+		url="jdbc:postgresql://cont-db1:13306/evaluator?createDatabaseIfNotExist=true&amp;autoReconnect=true" 
+		user="app_user" 
+		password="password"/>
+	 
+	<TableGroup name="tbl" size="100">
+		<ThreadGroup name="A" threadCount="10" thinkTime="50"
+			updates="30" deletes="40" inserts="30" readSize="10"
+			rampUpInterval="5" rampUpIncrement="20" reconnectInterval="1" />
+	</TableGroup>
+</EvaluatorConfiguration>
+

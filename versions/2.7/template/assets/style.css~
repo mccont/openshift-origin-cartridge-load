@@ -1,0 +1,61 @@
+.plot { width: 600px; height: 400px; }
+.status { width: 500px; padding: 5px; color:white; display: inline-block; align: top; }
+.statusmsg { display: inline-block; } 
+
+.inlinediv { display: block; }
+
+.inlinediv label { display: inline-block; width: 160px; }
+
+.inlinevarblock label { display: inline-block; width: 100px; }
+
+.inlinediv input { display: inline-block; }
+
+#controldialog {
+width: 450px;
+display: none;
+}
+
+#controlform { 
+width: 450px;
+}
+
+#wthreads, #rthreads { 
+width: 80px;
+maxwidth: 80px;
+padding-right: 10px;
+minwidth: 80px;
+display: inline;
+text-align: right; 
+}
+
+.sliderblock { 
+width: 450px;
+margin-bottom: 15px;
+}
+
+.sliderblock label {
+text-align: left;
+min-width: 150px;
+display: inline-block;
+}
+
+#sliderrthreads, #sliderwthreads { 
+width: 220px;
+display: inline-block;
+}
+
+.advancedbutton { 
+margin-top: 15px;
+margin-bottom: 15px;
+}
+
+#controlform .inlinediv label { 
+width: 200px;
+}
+
+.ONLINE  { background-color: #00FF00 } 
+.OFFLINE { background-color: #FF0000 } 
+.SUSPECT { background-color: #AA0000 } 
+.SHUNNED { background-color: #AA0000 } 
+.SYNCHRONIZING { background-color: #000000; color: #FFFFFF; } 
+
