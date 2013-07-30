@@ -241,15 +241,14 @@ class BristleWeb(SimpleHTTPRequestHandler):
 
              if qs['m'] == ['stop']:
                  print "Stopping known child processes"
-                 for pid in child_processes:
-                     try:
-                         os.killpg(pid,signal.SIGKILL)
-                     except Exception: 
-                         pass
-                     self.send_response(200)
-                     self.send_header('Content-type', 'application/json')
-                     self.end_headers()
-                     self.wfile.write('{msg: "Load stopped for " + child_pid, pid: child_pid }')
+                 child_pid = os.fork()
+                 if child_pid == 0:
+                       os.execl('stop_load.sh','load_tester');
+                 else:
+                       self.send_response(200)
+                       self.send_header('Content-type', 'application/json')
+                       self.end_headers()
+                       self.wfile.write('{msg: "Load stopped"}')
 
              if qs['m'] == ['load']:
                    parselog()
