@@ -2,7 +2,7 @@
 
 rm -f current.log create.log
 
-ps -ef|grep bristlecone.evaluator|grep -v grep|awk '{ print $2; }'| xargs kill -9
+ps -ef|grep bristlecone.evaluator|grep -v grep|awk '{ print $2; }'| xargs kill -s 9
 
 echo "Removing old databases"
 

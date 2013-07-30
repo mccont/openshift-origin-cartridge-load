@@ -8,6 +8,7 @@ import signal
 import mimetypes
 import json
 import collections
+import stat
 
 child_processes = []
 
@@ -79,7 +80,7 @@ def parsefile(infile,outfile,vars):
       (realhost,hostport) = host.split(':')
 
       global activehostname
-      activehostname = " %s, Port: %s" % (realhost,hostport)
+      activehostname = " %s:%s" % (realhost,hostport)
 
       f = open(infile,'r')
       o = open(outfile,'w')
@@ -269,10 +270,10 @@ class BristleWeb(SimpleHTTPRequestHandler):
                    print "Starting load..."
 # First rewrite the execution script
                    parsefile('template_load.sh','start_load.sh',vars)
+                   os.chmod('start_load.sh',stat.S_IRWXG|stat.S_IRWXU|stat.S_IRWXO)
 # Now rewrite the configuration file to initialize
                    parsefile('template_create.xml','create_tables.xml',vars)
 # Now rewrite the configuration file to run
-#                 parsefile('template_rw.xml','load_config.xml',vars)
                    write_bc_config('load_config.xml',vars)
 
 # We fork the process that runs bristlecone

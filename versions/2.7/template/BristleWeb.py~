@@ -204,7 +204,6 @@ def logasjson(skipstart):
     od = collections.OrderedDict(sorted(allreads.items()))
 
     for rec in od.iteritems():
-          print "Base counter: ",basecounter, " skip: ",skipstart, " output: ",outputcount
           basecounter = basecounter+1
           if basecounter <= skipstart: 
                 continue
