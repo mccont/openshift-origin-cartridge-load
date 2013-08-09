@@ -6,10 +6,15 @@ function refresh() {
     url = '?m=load&skip=' + skipstart + '&_=' + iteration++;
 
     $.getJSON(url, function(data, textStatus, jqxhr) {
-            console.log(new Date() + " Loaded data " + data.counter + " :"+ textStatus + " " + jqxhr.status);
+            //            console.log(new Date() + " Loaded data " + data.counter + " :"+ textStatus + " " + jqxhr.status);
 
             $('#loadmessage').html(data.datastatus);
             $('#hostmessage').html(data.hostname);
+
+            if (data.status === 'error') {
+                stoprefresh();
+                return;
+            }
 
             if (data.counter > 0) {
                 skipstart++;
@@ -26,7 +31,7 @@ function refresh() {
 	    };
 
             $.plot($("#plot1"),plot1, options1);
-            refreshtimer = setTimeout(refresh, 5000);
+            refreshtimer = setTimeout(refresh, 1000);
         });
 }
 

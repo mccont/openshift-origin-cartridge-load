@@ -16,8 +16,13 @@ allreads = {}
 allwrites = {}
 counter = 0
 records = 0
+lastseconds = 0
 currmsg = ''
+currstatus = 'idle'
+runstatus = ''
 activehostname = 'No active process'
+fakingit = 0
+fakeseconds = 0
 
 coreconfig = { 'core' : { 'testDuration' : 1200,
                           'autoCommit': 'false',
@@ -72,7 +77,6 @@ def parsefile(infile,outfile,vars):
 
       if 'conn' in vars:
             if 'host' in vars['conn']:
-                  print "Got the host from the client"
                   host = vars['conn']['host']
                   password = vars['conn']['password']
                   user = vars['conn']['user']
@@ -158,7 +162,12 @@ def write_bc_config(filename,vars):
 
 def parselog():
     logfile = 'current.log'
+    global currmsg
+    global currstatus
+    global runstatus
+    global lastseconds
     currmsg = 'Starting...'
+    currstatus = 'active'
 
     try: 
           f = open(logfile,'r')
@@ -171,36 +180,73 @@ def parselog():
     allreads = {}
     allwrites = {}
 
+    lastseconds = 0
+
+    linesprocessed = 0
+
     for line in f:
-        results = line.split(',')
+          if re.search(r"Can't connect to MySQL server",line):
+                currstatus = 'error'
+                currmsg = 'Cannot connect to MySQL server'
+                print "MySQL Connection error; returning that"
+                return
 
-        if (len(results) >= 13):
-            time = results[1]
-            selects = results[3]
-            updates = results[9]
-            deletes = results[11]
-            inserts = results[13]
-            reads = int(float(selects))
-            writes = int(float(updates) + float(deletes) + float(inserts))
-            realtime = re.match(r'\d+\s+INFO\s+(\d+)',time)
+          match = re.search(r"STATUS:\s(.*?)",line)
+          if (match):
+                currstatus = 'active'
+                currmsg = match.group(0)
+                runstatus = match.group(0)
 
-            seconds = int(int(realtime.group(1))/1000)
+          if re.search(r"\d+\s+INFO\s+\d+",line):
 
-            if seconds in allreads:
-                allreads[seconds] += reads
-                allwrites[seconds] += writes
-            else:
-                allreads[seconds] = reads
-                allwrites[seconds] = writes
+              results = line.split(',')
 
-def logasjson(skipstart):
+              if (len(results) >= 13):
+                    time = results[1]
+                    selects = results[3]
+                    updates = results[9]
+                    deletes = results[11]
+                    inserts = results[13]
+                    reads = int(float(selects))
+                    writes = int(float(updates) + float(deletes) + float(inserts))
+                    realtime = re.match(r'\d+\s+INFO\s+(\d+)',time)
+                
+                    seconds = int(int(realtime.group(1))/1000)
+                
+                    if seconds in allreads:
+                          linesprocessed = linesprocessed + 1
+                          allreads[seconds] += reads
+                          allwrites[seconds] += writes
+                    else:
+                          linesprocessed = linesprocessed + 1
+                          allreads[seconds] = reads
+                          allwrites[seconds] = writes
+
+                    lastseconds = seconds
+
+# If the test run has completed, then the last line is actually a summary
+# line and it needs to be ignored
+
+          if linesprocessed > 600:
+                if re.search(r'Test run complete',line):
+                      del allreads[lastseconds]
+                      del allwrites[lastseconds]
+
+
+def logasjson(skipbase):
     outputcount = 0
     basecounter = 0
     reads = []
     writes = []
-    global currmsg
+    global currmsg,currstatus
     global allreads,allwrites
+    global fakingit
+    global fakeseconds
+    global lastseconds
     windowsize = 150
+    skipstart = (skipbase % len(allreads))
+
+    print "Starting data output at ",skipstart
 
     od = collections.OrderedDict(sorted(allreads.items()))
 
@@ -209,21 +255,53 @@ def logasjson(skipstart):
           if basecounter <= skipstart: 
                 continue
           (seconds,readval) = rec
-          reads.append([(seconds*1000),allreads[seconds]])
-          writes.append([(seconds*1000),allwrites[seconds]])
+          if not fakingit:
+                fakeseconds = seconds
+          reads.append([(fakeseconds*1000),allreads[seconds]])
+          writes.append([(fakeseconds*1000),allwrites[seconds]])
+          if fakingit:
+                fakeseconds = fakeseconds + 2
           outputcount = outputcount+1
           if outputcount >= windowsize:
                 break
 
-    if (outputcount > 0):
-          currmsg = 'Displaying data'
-    else:
-          currmsg = 'Bristlecone starting; no data yet'
+    if (currstatus == 'active'):
+          if (outputcount > 0):
+                currmsg = 'Live data showing'
+
+# If the output count starts reducing from the windowsize
+# We fake the output by just looping round the material again, but 
+# update the display status to show that the stats are cached, rather
+# than new information
+
+    print "End of initial, total records: %d, outputcount: %d, windowsize: %d, skipstart: %d"%(len(allreads),outputcount,windowsize,skipstart)
+
+    if ((outputcount < windowsize) and
+        (skipstart > windowsize)):
+          print "Warning: We gotta loop the info round again, starting at ",lastseconds
+          currmsg = 'Cached data showing'
+          fakingit = 1
+
+          for rec in od.iteritems():
+                (seconds,readval) = rec
+
+# If we're going round again, we're automatically into fake second territory
+
+                reads.append([(fakeseconds*1000),allreads[seconds]])
+                writes.append([(fakeseconds*1000),allwrites[seconds]])
+                fakeseconds = fakeseconds + 2
+                fakesecdiff = seconds
+                outputcount = outputcount+1
+                if outputcount >= windowsize:
+                      break
+
+    print "Records in output: ",len(reads)
 
     return json.dumps({'reads': reads, 
                        'writes': writes, 
                        'counter': outputcount, 
                        'hostname' : activehostname,
+                       'status' : currstatus,
                        'datastatus': currmsg})
 
 class BristleWeb(SimpleHTTPRequestHandler):
@@ -248,7 +326,7 @@ class BristleWeb(SimpleHTTPRequestHandler):
                        self.send_response(200)
                        self.send_header('Content-type', 'application/json')
                        self.end_headers()
-                       self.wfile.write('{msg: "Load stopped"}')
+                       self.wfile.write(json.dumps({'datastatus' : "Load stopped"}))
 
              if qs['m'] == ['load']:
                    parselog()
@@ -263,8 +341,9 @@ class BristleWeb(SimpleHTTPRequestHandler):
                             'password' : 'secret',
                             }
                    if 'vars' in qs: 
-                         print "Got : ",str(qs['vars'][0])
                          vars = json.loads(str(qs['vars'][0]))
+
+                   fakingit = 0
 
                    print "Starting load..."
 # First rewrite the execution script
@@ -278,6 +357,11 @@ class BristleWeb(SimpleHTTPRequestHandler):
 # We fork the process that runs bristlecone
                    print "Starting an external process with the data"
                    print "Starting a load for %s@%s on %s" % (vars['conn']['user'],vars['conn']['password'],vars['conn']['host'])
+
+                   try: 
+                         os.remove('current.log')
+                   except:
+                         pass
                    
                    child_pid = os.fork()
                    if child_pid == 0:
