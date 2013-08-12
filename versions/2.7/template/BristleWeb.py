@@ -244,16 +244,21 @@ def logasjson(skipbase):
     global fakeseconds
     global lastseconds
     windowsize = 150
-    skipstart = (skipbase % len(allreads))
 
-    print "Starting data output at ",skipstart
+    skipstart = skipbase - windowsize
+
+    if len(allreads) > 0:
+          skipstart = (skipbase % len(allreads))
+
+#    print "Starting data output at ",skipstart
 
     od = collections.OrderedDict(sorted(allreads.items()))
 
     for rec in od.iteritems():
           basecounter = basecounter+1
-          if basecounter <= skipstart: 
-                continue
+          if (len(allreads) > windowsize):
+                if basecounter <= skipstart:
+                      continue
           (seconds,readval) = rec
           if not fakingit:
                 fakeseconds = seconds
@@ -274,7 +279,7 @@ def logasjson(skipbase):
 # update the display status to show that the stats are cached, rather
 # than new information
 
-    print "End of initial, total records: %d, outputcount: %d, windowsize: %d, skipstart: %d"%(len(allreads),outputcount,windowsize,skipstart)
+#    print "End of initial, total records: %d, outputcount: %d, windowsize: %d, skipstart: %d"%(len(allreads),outputcount,windowsize,skipstart)
 
     if ((outputcount < windowsize) and
         (skipstart > windowsize)):
@@ -295,7 +300,7 @@ def logasjson(skipbase):
                 if outputcount >= windowsize:
                       break
 
-    print "Records in output: ",len(reads)
+#    print "Records in output: ",len(reads)
 
     return json.dumps({'reads': reads, 
                        'writes': writes, 
@@ -336,6 +341,11 @@ class BristleWeb(SimpleHTTPRequestHandler):
                    self.wfile.write(logasjson(int(qs['skip'][0])))
 
              if qs['m'] == ['start']:
+                   try: 
+                         os.remove('current.log')
+                   except:
+                         pass
+
                    vars = { 'host' : 'localhost:3306',
                             'user' : 'tungsten',
                             'password' : 'secret',
@@ -345,7 +355,7 @@ class BristleWeb(SimpleHTTPRequestHandler):
 
                    fakingit = 0
 
-                   print "Starting load..."
+#                   print "Starting load..."
 # First rewrite the execution script
                    parsefile('template_load.sh','start_load.sh',vars)
                    os.chmod('start_load.sh',stat.S_IRWXG|stat.S_IRWXU|stat.S_IRWXO)
@@ -354,14 +364,11 @@ class BristleWeb(SimpleHTTPRequestHandler):
 # Now rewrite the configuration file to run
                    write_bc_config('load_config.xml',vars)
 
+
 # We fork the process that runs bristlecone
                    print "Starting an external process with the data"
                    print "Starting a load for %s@%s on %s" % (vars['conn']['user'],vars['conn']['password'],vars['conn']['host'])
 
-                   try: 
-                         os.remove('current.log')
-                   except:
-                         pass
                    
                    child_pid = os.fork()
                    if child_pid == 0:
