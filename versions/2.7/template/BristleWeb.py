@@ -313,6 +313,7 @@ class BristleWeb(SimpleHTTPRequestHandler):
       mimetypes.init()
       counter = 0
       records = {}
+      global allreads,allwrites
 
       def do_GET(self):
           parsed_path = urlparse.urlparse(self.path)
@@ -345,6 +346,9 @@ class BristleWeb(SimpleHTTPRequestHandler):
                          os.remove('current.log')
                    except:
                          pass
+
+                   allreads = ()
+                   allwrites = ()
 
                    vars = { 'host' : 'localhost:3306',
                             'user' : 'tungsten',
@@ -381,19 +385,19 @@ class BristleWeb(SimpleHTTPRequestHandler):
                          self.wfile.write('{msg: "Starting load for " + child_pid, pid: child_pid }')
 
           else:
-             filetoserve = parsed_path.path[1:]
+                filetoserve = parsed_path.path[1:]
 
-             if (len(filetoserve) == 0): 
-                 filetoserve = 'index.htm'
+                if (len(filetoserve) == 0): 
+                      filetoserve = 'index.htm'
 
-             try: 
-                  f = open(filetoserve,'r')
-             except: 
-                  self.send_response(404)
-             else:
-                 self.send_response(200)
-                 (type,encoding) = mimetypes.guess_type(filetoserve)
-                 self.send_header('Content-type',type)
-                 self.end_headers()
-                 for line in f:
-                     self.wfile.write(line)
+                try: 
+                      f = open(filetoserve,'r')
+                except: 
+                      self.send_response(404)
+                else:
+                      self.send_response(200)
+                      (type,encoding) = mimetypes.guess_type(filetoserve)
+                      self.send_header('Content-type',type)
+                      self.end_headers()
+                      for line in f:
+                            self.wfile.write(line)

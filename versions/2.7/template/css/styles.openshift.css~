@@ -1,0 +1,237 @@
+.theme-openshift body, .theme-openshift input, .theme-openshift textarea, .theme-openshift button {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+.theme-openshift body {
+  background: #333333 url('../images/noise-03.png');
+  background: url('../images/noise-03.png'), -moz-linear-gradient(top, #333333 0%, #333333 100%);
+  background: url('../images/noise-03.png'), -webkit-linear-gradient(top, #333333 0%, #333333 100%);
+  background: url('../images/noise-03.png'), -ms-linear-gradient(top, #333333 0%, #333333 100%);
+  background: url('../images/noise-03.png'), linear-gradient(to bottom, #333333 0%, #333333 100%);
+  color: #FFF; }
+.theme-openshift body > header {
+  overflow: hidden;
+  background: #010101; }
+  .theme-openshift body > header .logo {
+    display: block;
+    width: 316px;
+    height: 50px;
+    margin: 12px 15px 18px;
+    padding: 0px;
+    background-image: url(../images/logo_redhat.png);
+    background-repeat: no-repeat;
+    background-size: 316px 50px; }
+    .theme-openshift body > header .logo img, .theme-openshift body > header .logo h1 {
+      display: none; }
+.theme-openshift input[type=text], .theme-openshift input[type=number], .theme-openshift input[type=password] {
+  border-radius: 0;
+  font-size: 18px;
+  font-weight: 500; }
+.theme-openshift input[type=password] {
+  font-size: 28px; }
+.theme-openshift .dropdown {
+  border: none;
+  border-radius: 0; }
+  .theme-openshift .dropdown:after {
+    content: "\f078";
+    border: none;
+    border-radius: 0;
+    background: #939598;
+    background: -moz-linear-gradient(top, #939598 0%, #231f20 50%);
+    background: -webkit-linear-gradient(top, #939598 0%, #231f20 50%);
+    background: -ms-linear-gradient(top, #939598 0%, #231f20 50%);
+    background: linear-gradient(to bottom, #939598 0%, #231f20 50%);
+    line-height: 23px; }
+  .theme-openshift .dropdown.open li:not(.selected):hover {
+    color: #333;
+    background: #bfbfbf; }
+  .theme-openshift .dropdown li {
+    border: none;
+    background: #e2e2e2;
+    color: #333;
+    text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.8);
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 30px; }
+  .theme-openshift .dropdown li.selected {
+    background: #9eb2d6;
+    background: -moz-linear-gradient(top, #9eb2d6 0%, #3e65ad 50%);
+    background: -webkit-linear-gradient(top, #9eb2d6 0%, #3e65ad 50%);
+    background: -ms-linear-gradient(top, #9eb2d6 0%, #3e65ad 50%);
+    background: linear-gradient(to bottom, #9eb2d6 0%, #3e65ad 50%);
+    color: #FFF;
+    text-shadow: 0px 2px 0px rgba(0, 0, 0, 0.4); }
+.theme-openshift .actions.list {
+  border-radius: 0; }
+  .theme-openshift .actions.list li {
+    border: none;
+    color: #333;
+    font-weight: bold; }
+    .theme-openshift .actions.list li:hover {
+      color: #333;
+      background: #bfbfbf; }
+.theme-openshift button {
+  border: none;
+  border-radius: 0;
+  background: #939598;
+  background: -moz-linear-gradient(top, #939598 0%, #231f20 100%);
+  background: -webkit-linear-gradient(top, #939598 0%, #231f20 100%);
+  background: -ms-linear-gradient(top, #939598 0%, #231f20 100%);
+  background: linear-gradient(to bottom, #939598 0%, #231f20 100%); }
+  .theme-openshift button:before {
+    border-radius: 0;
+    border: none;
+    background: #5c5c5c;
+    background: -moz-linear-gradient(top, #5c5c5c 0%, #231f20 100%);
+    background: -webkit-linear-gradient(top, #5c5c5c 0%, #231f20 100%);
+    background: -ms-linear-gradient(top, #5c5c5c 0%, #231f20 100%);
+    background: linear-gradient(to bottom, #5c5c5c 0%, #231f20 100%); }
+  .theme-openshift button.round {
+    border: 2px solid #000;
+    border-radius: 100%;
+    padding: 0;
+    background: #9eb2d6;
+    background: -moz-linear-gradient(top, #9eb2d6 0%, #3e65ad 50%);
+    background: -webkit-linear-gradient(top, #9eb2d6 0%, #3e65ad 50%);
+    background: -ms-linear-gradient(top, #9eb2d6 0%, #3e65ad 50%);
+    background: linear-gradient(to bottom, #9eb2d6 0%, #3e65ad 50%); }
+  .theme-openshift button.tools-icon {
+    background: #9eb2d6 url(../images/tools-icon.svg) center center no-repeat;
+    background: url(../images/tools-icon.svg) center center no-repeat, -moz-linear-gradient(top, #9eb2d6 0%, #3e65ad 100%);
+    background: url(../images/tools-icon.svg) center center no-repeat, -webkit-linear-gradient(top, #9eb2d6 0%, #3e65ad 100%);
+    background: url(../images/tools-icon.svg) center center no-repeat, -ms-linear-gradient(top, #9eb2d6 0%, #3e65ad 100%);
+    background: url(../images/tools-icon.svg) center center no-repeat, linear-gradient(to bottom, #9eb2d6 0%, #3e65ad 100%); }
+.theme-openshift .modal {
+  background: #333333 url(../images/noise-02.png);
+  background: url(../images/noise-02.png), -moz-linear-gradient(top, #333333 0%, #333333 100%);
+  background: url(../images/noise-02.png), -webkit-linear-gradient(top, #333333 0%, #333333 100%);
+  background: url(../images/noise-02.png), -ms-linear-gradient(top, #333333 0%, #333333 100%);
+  background: url(../images/noise-02.png), linear-gradient(to bottom, #333333 0%, #333333 100%); }
+  .theme-openshift .modal .actions {
+    background: #444444 url(../images/noise-02.png);
+    background: url(../images/noise-02.png), -moz-linear-gradient(top, #444444 0%, #444444 100%);
+    background: url(../images/noise-02.png), -webkit-linear-gradient(top, #444444 0%, #444444 100%);
+    background: url(../images/noise-02.png), -ms-linear-gradient(top, #444444 0%, #444444 100%);
+    background: url(../images/noise-02.png), linear-gradient(to bottom, #444444 0%, #444444 100%);
+    border-top: none;
+    box-shadow: none; }
+  .theme-openshift .modal .progress {
+    background: #010101; }
+    .theme-openshift .modal .progress:after,
+    .theme-openshift .modal .progress label span:after {
+      background: #333; }
+    .theme-openshift .modal .progress label.selected span:before {
+      background: #9eb2d6;
+      background: -moz-linear-gradient(top, #9eb2d6 0%, #3e65ad 50%);
+      background: -webkit-linear-gradient(top, #9eb2d6 0%, #3e65ad 50%);
+      background: -ms-linear-gradient(top, #9eb2d6 0%, #3e65ad 50%);
+      background: linear-gradient(to bottom, #9eb2d6 0%, #3e65ad 50%); }
+  .theme-openshift .modal .step .container {
+    background: #000; }
+.theme-openshift .modal-dimmer {
+  opacity: 0.8;
+  background: url(../images/trees.png) no-repeat bottom rgba(0, 0, 0, 0.3);
+  background-size: 100%; }
+.theme-openshift #login-wizard {
+  border: 2px solid #000; }
+.theme-openshift .select-list a {
+  border-color: #000;
+  background: #444; }
+.theme-openshift .select-list .section,
+.theme-openshift .select-list a.selected {
+  background: #000; }
+.theme-openshift .check-row {
+  background: #000; }
+.theme-openshift .listview .column {
+  -webkit-transform-origin: -50px 0px;
+  -ms-transform-origin: -50px 0px;
+  transform-origin: -50px 0px;
+  background: rgba(0, 0, 0, 0.3); }
+  .theme-openshift .listview .column:first-child {
+    background: none; }
+.theme-openshift .listview .column.ui-state-selected {
+  border-radius: 0; }
+.theme-openshift .listview .column.ui-state-active .row {
+  background: #5c5c5c;
+  background: -moz-linear-gradient(top, #5c5c5c 0%, #231f20 100%);
+  background: -webkit-linear-gradient(top, #5c5c5c 0%, #231f20 100%);
+  background: -ms-linear-gradient(top, #5c5c5c 0%, #231f20 100%);
+  background: linear-gradient(to bottom, #5c5c5c 0%, #231f20 100%);
+  opacity: 0.5; }
+.theme-openshift .listview .column.ui-state-active .row.ui-state-selected {
+  background: #5c5c5c;
+  background: -moz-linear-gradient(top, #5c5c5c 0%, #231f20 100%);
+  background: -webkit-linear-gradient(top, #5c5c5c 0%, #231f20 100%);
+  background: -ms-linear-gradient(top, #5c5c5c 0%, #231f20 100%);
+  background: linear-gradient(to bottom, #5c5c5c 0%, #231f20 100%);
+  opacity: 1.0; }
+.theme-openshift .listview .row {
+  border-radius: 0;
+  background: #5c5c5c;
+  background: -moz-linear-gradient(top, #5c5c5c 0%, #231f20 100%);
+  background: -webkit-linear-gradient(top, #5c5c5c 0%, #231f20 100%);
+  background: -ms-linear-gradient(top, #5c5c5c 0%, #231f20 100%);
+  background: linear-gradient(to bottom, #5c5c5c 0%, #231f20 100%); }
+  .theme-openshift .listview .row:after {
+    background-image: url(../images/icons-openshift-100x100-default.svg);
+    background-repeat: no-repeat; }
+  .theme-openshift .listview .row .actions {
+    border: 1px solid #939598;
+    background: #e2e2e2; }
+  .theme-openshift .listview .row .info > span {
+    border-radius: 0;
+    background: #939598;
+    background: -moz-linear-gradient(top, #939598 0%, #231f20 50%);
+    background: -webkit-linear-gradient(top, #939598 0%, #231f20 50%);
+    background: -ms-linear-gradient(top, #939598 0%, #231f20 50%);
+    background: linear-gradient(to bottom, #939598 0%, #231f20 50%); }
+  .theme-openshift .listview .row .info .info-title {
+    background: none; }
+  .theme-openshift .listview .row .status {
+    background-image: url(../images/status-sprite-openshift-60x60.svg);
+    background-repeat: no-repeat; }
+.theme-openshift .state .shunned {
+  opacity: 0.6; }
+  .theme-openshift .state .shunned:hover {
+    color: #333; }
+.theme-openshift .loading {
+  background-color: rgba(51, 51, 51, 0.8); }
+  .theme-openshift .loading .spinner {
+    background: url(../images/refresh_red.svg); }
+.theme-openshift .toolbar {
+  border-top: 5px solid #CD1F2B;
+  margin-top: -85px;
+  background: #333; }
+  .theme-openshift .toolbar.ui-state-open {
+    -moz-transform: translateY(-15px);
+    -ms-transform: translateY(-15px);
+    -webkit-transform: translateY(-15px);
+    transform: translateY(-15px); }
+  .theme-openshift .toolbar:before {
+    position: absolute;
+    top: -62px;
+    right: 0px;
+    left: auto;
+    display: block;
+    width: 0px;
+    height: 0px;
+    border: none;
+    border-bottom: 61px solid #CD1F2B;
+    border-left: 61px solid transparent;
+    border-right: 0px solid transparent;
+    border-radius: 0;
+    padding: 0px;
+    background: none;
+    color: #fff;
+    text-align: center;
+    text-indent: -40px;
+    line-height: 90px;
+    cursor: pointer; }
+  .theme-openshift .toolbar a {
+    border-radius: 0;
+    background: #939598;
+    background: -moz-linear-gradient(top, #939598 0%, #231f20 100%);
+    background: -webkit-linear-gradient(top, #939598 0%, #231f20 100%);
+    background: -ms-linear-gradient(top, #939598 0%, #231f20 100%);
+    background: linear-gradient(to bottom, #939598 0%, #231f20 100%); }
+.theme-openshift .service-icon:after {
+  background-image: url(../images/icons-openshift-50x50-default.svg);
+  background-repeat: no-repeat; }

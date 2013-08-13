@@ -19,7 +19,11 @@ while(1):
    except socket.error: 
        print "Socket ",port," in use; waiting until it should be free"
        time.sleep(15)
+   except NameError as e:
+       print "Some other exception occurred: ",e
    except:
+       print "Some other exception occurred: ",sys.exc_info()[0]
+       time.sleep(30)
        pass
    else: 
        pass

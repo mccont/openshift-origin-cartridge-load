@@ -31,7 +31,7 @@ function refresh() {
 	    };
 
             $.plot($("#plot1"),plot1, options1);
-            refreshtimer = setTimeout(refresh, 1000);
+            refreshtimer = setTimeout(refresh, 2000);
         });
 }
 
@@ -86,42 +86,79 @@ function startload() {
 
 $(document).ready(function() { 
 
-        $("#logocontrol").click(function(){ $("#controldialog").dialog(
-                                                                       {buttons: { "Start": function() { startload(); $(this).dialog("close"); },
-                                                                                   "Stop": function() { stopload(); $(this).dialog("close"); }, 
-                                                                                       "Refresh": function() { refresh(); $(this).dialog("close"); },
-                                                                                           },
-                                                                               width: '500px',
-                                                                               resizable: false,
-                                                                               });
-            });
+        var urlParams;
+        var match,
+            pl     = /\+/g,  // Regex for replacing addition symbol with a space
+            search = /([^&=]+)=?([^&]*)/g,
+            decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
+            query  = window.location.search.substring(1);
+            
+            urlParams = {};
+            while (match = search.exec(query)) {
+                urlParams[decode(match[1])] = decode(match[2]);
+            }
+            
+            $("#logocontrol").click(function(){ $("#controldialog").dialog(
+                                                                           {buttons: { "Start": function() { startload(); $(this).dialog("close"); },
+                                                                                       "Stop": function() { stopload(); $(this).dialog("close"); }, 
+                                                                                           "Refresh": function() { refresh(); $(this).dialog("close"); },
+                                                                                               },
+                                                                                   width: '500px',
+                                                                                   resizable: false,
+                                                                                   });
+                });
+            
+            $(function() {
+                    $( "#sliderrthreads" ).slider({
+                            range: "min",
+                                min: 1,
+                                max: 50,
+                                value: 30,
+                                slide: function( event, ui ) {
+                                $( "#rthreads" ).html( ui.value );
+                            }
+                        });
+                    $( "#rthreads" ).html($( "#sliderrthreads" ).slider( "value" ) );
+                });
 
-        $(function() {
-                $( "#sliderrthreads" ).slider({
-                        range: "min",
-                            min: 1,
-                            max: 50,
-                            value: 30,
-                            slide: function( event, ui ) {
-                            $( "#rthreads" ).html( ui.value );
-                        }
-                    });
-                $( "#rthreads" ).html($( "#sliderrthreads" ).slider( "value" ) );
-            });
+            $(function() {
+                    $( "#sliderwthreads" ).slider({
+                            range: "min",
+                                value: 10,
+                                min: 1,
+                                max: 50,
+                                slide: function( event, ui ) {
+                                $( "#wthreads" ).html( ui.value );
+                            }
+                        });
+                    $( "#wthreads" ).html( $( "#sliderwthreads" ).slider( "value" ) );
+                });
 
-        $(function() {
-                $( "#sliderwthreads" ).slider({
-                        range: "min",
-                            value: 10,
-                            min: 1,
-                            max: 50,
-                            slide: function( event, ui ) {
-                            $( "#wthreads" ).html( ui.value );
-                        }
-                    });
-                $( "#wthreads" ).html( $( "#sliderwthreads" ).slider( "value" ) );
-            });
+            var paramlist = new Array('user','host','password',
+                                      'connections',
+                                      'rthreads','rreadsize',
+                                      'wthreads','wreadsize','winserts','wdeletes','wupdates',
+                                      'duration');
 
+            if (urlParams.user)
+                $('#user').val(urlParams.user);
+            if (urlParams.password)
+                $('#password').val(urlParams.password);
+            if (urlParams.host)
+                $('#host').val(urlParams.host);
+            if (urlParams.connections)
+                $('#connectionts').val(urlParams.connections);
+            if (urlParams.rthreads)
+                $('#rthreads').html(urlParams.rthreads);
+            if (urlParams.wthreads)
+                $('#wthreads').html(urlParams.wthreads);
+
+            if (urlParams.mode && urlParams.mode == 'start') {
+                startload();
+            }
+            if (urlParams.mode && urlParams.mode == 'refresh') {
+                refresh();
+            }
 
 
     });

@@ -7,8 +7,8 @@ ps -ef|grep bristlecone.evaluator|grep -v grep|awk '{ print $2; }'| xargs kill -
 {
     echo "Removing old databases"
 
-    mysql --connect-timeout=15 -h @@REALHOST@@ -u @@USER@@ -p@@PASSWORD@@ -P @@HOSTPORT@@ -e 'DROP DATABASE IF EXISTS evaluator' 
-    mysql --connect-timeout=15 -h @@REALHOST@@ -u @@USER@@ -p@@PASSWORD@@ -P @@HOSTPORT@@ -e 'CREATE DATABASE evaluator'
+    mysql --connect-timeout=15 -h 192.168.2.20 -u app_user -ppassword -P 9999 -e 'DROP DATABASE IF EXISTS evaluator' 
+    mysql --connect-timeout=15 -h 192.168.2.20 -u app_user -ppassword -P 9999 -e 'CREATE DATABASE evaluator'
     
     echo "STATUS: Initializing databases"
     ./bristlecone/bin/evaluator_tungsten.sh create_tables.xml

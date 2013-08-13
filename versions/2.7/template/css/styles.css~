@@ -79,15 +79,15 @@ body, input, textarea, button {
 body {
   margin: 0;
   min-height: 100%;
-  background: #192634 url('../images/noise-02.png');
-  background: url('../images/noise-02.png'), -moz-linear-gradient(top, #263342 0%, #192634 100%);
-  background: url('../images/noise-02.png'), -webkit-linear-gradient(top, #263342 0%, #192634 100%);
-  background: url('../images/noise-02.png'), -ms-linear-gradient(top, #263342 0%, #192634 100%);
-  background: url('../images/noise-02.png'), linear-gradient(to bottom, #263342 0%, #192634 100%); }
+  background: #192634 url(../images/noise-02.png);
+  background: url(../images/noise-02.png), -moz-linear-gradient(top, #263342 0%, #192634 100%);
+  background: url(../images/noise-02.png), -webkit-linear-gradient(top, #263342 0%, #192634 100%);
+  background: url(../images/noise-02.png), -ms-linear-gradient(top, #263342 0%, #192634 100%);
+  background: url(../images/noise-02.png), linear-gradient(to bottom, #263342 0%, #192634 100%); }
 
 body > header {
   overflow: hidden;
-  background: #101d26 url('../images/noise-02.png'); }
+  background: #101d26 url(../images/noise-02.png); }
 
 h1, h2, h3 {
   font-weight: normal;
@@ -179,7 +179,7 @@ button {
   width: 960px;
   height: 680px;
   position: fixed;
-  background: url('../images/grid-bg.png');
+  background: url(../images/grid-bg.png);
   left: 50%;
   top: 50%;
   margin: -337px 0 0 -480px;
@@ -198,11 +198,11 @@ button {
     display: table;
     table-layout: fixed;
     width: 100%;
-    background: #444444 url('../images/noise-02.png');
-    background: url('../images/noise-02.png'), -moz-linear-gradient(top, #5e5e5e 0%, #444444 100%);
-    background: url('../images/noise-02.png'), -webkit-linear-gradient(top, #5e5e5e 0%, #444444 100%);
-    background: url('../images/noise-02.png'), -ms-linear-gradient(top, #5e5e5e 0%, #444444 100%);
-    background: url('../images/noise-02.png'), linear-gradient(to bottom, #5e5e5e 0%, #444444 100%); }
+    background: #444444 url(../images/noise-02.png);
+    background: url(../images/noise-02.png), -moz-linear-gradient(top, #5e5e5e 0%, #444444 100%);
+    background: url(../images/noise-02.png), -webkit-linear-gradient(top, #5e5e5e 0%, #444444 100%);
+    background: url(../images/noise-02.png), -ms-linear-gradient(top, #5e5e5e 0%, #444444 100%);
+    background: url(../images/noise-02.png), linear-gradient(to bottom, #5e5e5e 0%, #444444 100%); }
     .modal .progress.four-step label {
       width: 25%; }
     .modal .progress.four-step:after {
@@ -211,7 +211,7 @@ button {
     .modal .progress:after {
       content: "";
       position: absolute;
-      background: #272727 url('../images/noise-02.png');
+      background: #272727 url(../images/noise-02.png);
       display: block;
       top: 36px;
       left: 160px;
@@ -231,7 +231,7 @@ button {
         .modal .progress label span:after {
           content: "";
           position: absolute;
-          background: #272727 url('../images/noise-02.png');
+          background: #272727 url(../images/noise-02.png);
           display: block;
           top: 26px;
           left: 50%;
@@ -452,17 +452,17 @@ button {
   .listview .column.ui-state-active:not(:first-child) {
     margin-left: -28px; }
   .listview .column.ui-state-active .row {
-    background: #999999 url('../images/noise-02.png');
-    background: url('../images/noise-02.png'), -moz-linear-gradient(top, #bbbbbb 0%, #999999 100%);
-    background: url('../images/noise-02.png'), -webkit-linear-gradient(top, #bbbbbb 0%, #999999 100%);
-    background: url('../images/noise-02.png'), -ms-linear-gradient(top, #bbbbbb 0%, #999999 100%);
-    background: url('../images/noise-02.png'), linear-gradient(to bottom, #bbbbbb 0%, #999999 100%); }
+    background: #999999 url(../images/noise-02.png);
+    background: url(../images/noise-02.png), -moz-linear-gradient(top, #bbbbbb 0%, #999999 100%);
+    background: url(../images/noise-02.png), -webkit-linear-gradient(top, #bbbbbb 0%, #999999 100%);
+    background: url(../images/noise-02.png), -ms-linear-gradient(top, #bbbbbb 0%, #999999 100%);
+    background: url(../images/noise-02.png), linear-gradient(to bottom, #bbbbbb 0%, #999999 100%); }
     .listview .column.ui-state-active .row.ui-state-selected {
-      background: #aaaaaa url('../images/noise-02.png');
-      background: url('../images/noise-02.png'), -moz-linear-gradient(top, #eeeeee 0%, #aaaaaa 100%);
-      background: url('../images/noise-02.png'), -webkit-linear-gradient(top, #eeeeee 0%, #aaaaaa 100%);
-      background: url('../images/noise-02.png'), -ms-linear-gradient(top, #eeeeee 0%, #aaaaaa 100%);
-      background: url('../images/noise-02.png'), linear-gradient(to bottom, #eeeeee 0%, #aaaaaa 100%);
+      background: #aaaaaa url(../images/noise-02.png);
+      background: url(../images/noise-02.png), -moz-linear-gradient(top, #eeeeee 0%, #aaaaaa 100%);
+      background: url(../images/noise-02.png), -webkit-linear-gradient(top, #eeeeee 0%, #aaaaaa 100%);
+      background: url(../images/noise-02.png), -ms-linear-gradient(top, #eeeeee 0%, #aaaaaa 100%);
+      background: url(../images/noise-02.png), linear-gradient(to bottom, #eeeeee 0%, #aaaaaa 100%);
       /* Arrow after row */ }
       .listview .column.ui-state-active .row.ui-state-selected:before {
         content: "";
@@ -538,11 +538,11 @@ button {
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
-  background: #aaaaaa url('../images/noise-02.png');
-  background: url('../images/noise-02.png'), -moz-linear-gradient(top, #eeeeee 0%, #aaaaaa 100%);
-  background: url('../images/noise-02.png'), -webkit-linear-gradient(top, #eeeeee 0%, #aaaaaa 100%);
-  background: url('../images/noise-02.png'), -ms-linear-gradient(top, #eeeeee 0%, #aaaaaa 100%);
-  background: url('../images/noise-02.png'), linear-gradient(to bottom, #eeeeee 0%, #aaaaaa 100%); }
+  background: #aaaaaa url(../images/noise-02.png);
+  background: url(../images/noise-02.png), -moz-linear-gradient(top, #eeeeee 0%, #aaaaaa 100%);
+  background: url(../images/noise-02.png), -webkit-linear-gradient(top, #eeeeee 0%, #aaaaaa 100%);
+  background: url(../images/noise-02.png), -ms-linear-gradient(top, #eeeeee 0%, #aaaaaa 100%);
+  background: url(../images/noise-02.png), linear-gradient(to bottom, #eeeeee 0%, #aaaaaa 100%); }
   .listview .row:hover {
     width: 302px;
     border-width: 3px;
@@ -734,15 +734,15 @@ button {
 /* Alternative icon styles */
 .icon-style-flat .service-icon:after,
 .icon-style-flat .column.ui-state-selected:first-child .row:after {
-  background-image: url('../images/icons-50x50-flat.svg'); }
+  background-image: url(../images/icons-50x50-flat.svg); }
 .icon-style-flat .column.ui-state-selected .row:after {
-  background-image: url('../images/icons-100x100-flat.svg'); }
+  background-image: url(../images/icons-100x100-flat.svg); }
 
 .icon-style-emboss .service-icon:after,
 .icon-style-emboss .column.ui-state-selected:first-child .row:after {
-  background-image: url('../images/icons-50x50-emboss.svg'); }
+  background-image: url(../images/icons-50x50-emboss.svg); }
 .icon-style-emboss .column.ui-state-selected .row:after {
-  background-image: url('../images/icons-100x100-emboss.svg'); }
+  background-image: url(../images/icons-100x100-emboss.svg); }
 
 .state {
   line-height: 22px;
@@ -812,7 +812,7 @@ ul.state li:before {
   position: relative;
   width: 260px;
   padding: 10px 140px 10px 22px;
-  background: black url('../images/noise-02.png');
+  background: black url(../images/noise-02.png);
   color: #fff; }
   .logo h1, .logo h2 {
     font-weight: 200;
@@ -844,7 +844,7 @@ ul.state li:before {
   padding: 30px 10px 10px;
   z-index: 400;
   border-top: 1px solid #313F4C;
-  background: #101d26 url('../images/noise-02.png');
+  background: #101d26 url(../images/noise-02.png);
   -moz-transform: translateY(80px);
   -ms-transform: translateY(80px);
   -webkit-transform: translateY(80px);
@@ -868,7 +868,7 @@ ul.state li:before {
     position: absolute;
     top: -40px;
     left: 50%;
-    background: #101d26 url('../images/noise-02.png');
+    background: #101d26 url(../images/noise-02.png);
     color: #fff;
     text-align: center;
     padding: 10px;
@@ -897,11 +897,11 @@ ul.state li:before {
     position: relative;
     margin: 0 0.25%;
     font-size: 16px;
-    background: #aaaaaa url('../images/noise-02.png');
-    background: url('../images/noise-02.png'), -moz-linear-gradient(top, #eeeeee 0%, #aaaaaa 100%);
-    background: url('../images/noise-02.png'), -webkit-linear-gradient(top, #eeeeee 0%, #aaaaaa 100%);
-    background: url('../images/noise-02.png'), -ms-linear-gradient(top, #eeeeee 0%, #aaaaaa 100%);
-    background: url('../images/noise-02.png'), linear-gradient(to bottom, #eeeeee 0%, #aaaaaa 100%);
+    background: #aaaaaa url(../images/noise-02.png);
+    background: url(../images/noise-02.png), -moz-linear-gradient(top, #eeeeee 0%, #aaaaaa 100%);
+    background: url(../images/noise-02.png), -webkit-linear-gradient(top, #eeeeee 0%, #aaaaaa 100%);
+    background: url(../images/noise-02.png), -ms-linear-gradient(top, #eeeeee 0%, #aaaaaa 100%);
+    background: url(../images/noise-02.png), linear-gradient(to bottom, #eeeeee 0%, #aaaaaa 100%);
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing: border-box; }
