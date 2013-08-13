@@ -146,7 +146,7 @@ $(document).ready(function() {
             if (urlParams.host)
                 $('#host').val(urlParams.host);
             if (urlParams.connections)
-                $('#connectionts').val(urlParams.connections);
+                $('#connections').val(urlParams.connections);
             if (urlParams.rthreads)
                 $('#rthreads').html(urlParams.rthreads);
             if (urlParams.wthreads)
