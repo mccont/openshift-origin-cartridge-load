@@ -46,7 +46,7 @@ function stopload() {
     url = '?m=stop';
 
     $.getJSON(url, '', function(data,status,jqhxr) {
-            $('#loadmessage').html('Waiting for data load to start');
+            $('#loadmessage').html('Load generator stopped');
         });
     stoprefresh();
 }

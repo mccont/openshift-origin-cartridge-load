@@ -191,11 +191,17 @@ def parselog():
                 print "MySQL Connection error; returning that"
                 return
 
-          match = re.search(r"STATUS:\s(.*?)",line)
+          match = re.search(r"STATUS:\s+(.*)",line)
           if (match):
                 currstatus = 'active'
-                currmsg = match.group(0)
-                runstatus = match.group(0)
+                currmsg = match.group(1)
+                runstatus = match.group(1)
+
+          match = re.search(r"com.continuent.bristlecone.evaluator.EvaluatorException:\s+(.*)",line)
+          if (match):
+                currstatus = 'active'
+                currmsg = match.group(1)
+                runstatus = match.group(1)
 
           if re.search(r"\d+\s+INFO\s+\d+",line):
 
