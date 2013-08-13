@@ -20,14 +20,14 @@ function refresh() {
                 skipstart++;
             }
 
-            var m4_read_a={data: data.reads, color: '#EFEFEF', label: 'Reads'};
+            var m4_read_a={data: data.reads, color: '#ffffff', label: 'Reads'};
             var m4_write_a={data: data.writes, color: '#3399FF', label: 'Writes'};
             var plot1=[m4_read_a,m4_write_a,];
             var options1 = {
-                xaxis: { mode: "time", ticks: 6, timeformat: "%H:%M:%S", color: "#555555" },
-                yaxis: { min: 0, color: "#555555" },
-                grid: { hoverable: true, clickable: true, aboveData: false },
-                legend: { position: "sw", backgroundOpacity: 0, margin: 4, color: "#ffffff"  }
+                xaxis: { mode: "time", ticks: 6, timeformat: "%H:%M:%S", color: "#cd1f2b", tickColor: "#cd1f2b", font: "color #cd1f2b" },
+                yaxis: { min: 0, color: "#cd1f2b", tickColor: "#cd1f2b", font: "color #cd1f2b" },
+                grid: { hoverable: true, clickable: true, aboveData: false, color: "#cd1f2b" },
+                legend: { position: "sw", backgroundOpacity: 0, margin: 4, color: "#cd1f2b"  }
 	    };
 
             $.plot($("#plot1"),plot1, options1);
@@ -111,8 +111,8 @@ $(document).ready(function() {
                     $( "#sliderrthreads" ).slider({
                             range: "min",
                                 min: 1,
-                                max: 50,
-                                value: 30,
+                                max: 330,
+                                value: 330,
                                 slide: function( event, ui ) {
                                 $( "#rthreads" ).html( ui.value );
                             }
@@ -123,9 +123,9 @@ $(document).ready(function() {
             $(function() {
                     $( "#sliderwthreads" ).slider({
                             range: "min",
-                                value: 10,
+                                value: 150,
                                 min: 1,
-                                max: 50,
+                                max: 300,
                                 slide: function( event, ui ) {
                                 $( "#wthreads" ).html( ui.value );
                             }
