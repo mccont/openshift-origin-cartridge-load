@@ -46,7 +46,6 @@ function stopload() {
     url = '?m=stop';
 
     $.getJSON(url, '', function(data,status,jqhxr) {
-            console.log(new Date() + " Load Started: " + textStatus + " " + jqxhr.msg); //success
             $('#loadmessage').html('Waiting for data load to start');
         });
     stoprefresh();
