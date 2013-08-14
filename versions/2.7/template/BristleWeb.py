@@ -325,8 +325,9 @@ def logasjson(skipbase):
                  baseseconds = reads[counter][0] + int(skipbase/windowsize)*(windowsize*2)
            reads[counter][0] = baseseconds*1000
            writes[counter][0] = baseseconds*1000
+
            counter = counter + 1
-           baseseconds = baseseconds +2
+           baseseconds = baseseconds +1
 
      datalength = len(reads)
      print "Records in output: ",datalength, " , should be ",windowsize
