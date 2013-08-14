@@ -16,7 +16,7 @@ function refresh() {
                 return;
             }
 
-            if (data.counter > 0) {
+            if (data.counter == 0) {
                 skipstart++;
             }
 

@@ -14,6 +14,8 @@ child_processes = []
 
 allreads = {}
 allwrites = {}
+reads = []
+writes = []
 counter = 0
 records = 0
 lastseconds = 0
@@ -152,7 +154,7 @@ def write_bc_config(filename,vars):
                         thgroups += writexml('ThreadGroup',coreconfig['thrgrouprw'],coreconfig['thrgrouprw'],None)
 
       conf.write(writexml('EvaluatorConfiguration',
-                          coreconfig['core'],coreconfig['core'],
+                          coreconfig['core'],vars['core'],
                           connlist + 
                           writexml('TableGroup',coreconfig['tabgroup'],coreconfig['tabgroup'],
                                    thgroups
@@ -190,6 +192,11 @@ def parselog():
                 currmsg = 'Cannot connect to MySQL server'
                 print "MySQL Connection error; returning that"
                 return
+
+          if re.search(r"Test run complete",line):
+                if (lastseconds != 0):
+                      del(allreads[lastseconds])
+                      del(allwrites[lastseconds])
 
           match = re.search(r"STATUS:\s+(.*)",line)
           if (match):
@@ -233,87 +240,107 @@ def parselog():
 # If the test run has completed, then the last line is actually a summary
 # line and it needs to be ignored
 
-          if linesprocessed > 600:
-                if re.search(r'Test run complete',line):
-                      del allreads[lastseconds]
-                      del allwrites[lastseconds]
+# Extract a window of data using start/end points
 
 
+def populatedata(start,stop):
+      global allreads,allwrites
+      global reads,writes
+
+#      print "      Asked to populate data from %d to %d"%(start,stop)
+
+      pointer = -1
+
+      od = collections.OrderedDict(sorted(allreads.items()))
+
+      for rec in od.iteritems():
+            pointer = pointer + 1
+# Skip to the start of the records we want to extract
+            if (pointer < start):
+                  continue
+            if (pointer >= stop):
+                  break
+            (seconds,value) = rec
+            reads.append([seconds,allreads[seconds]])
+            writes.append([seconds,allwrites[seconds]])
+
+#      print "      Records appended into tables:",len(reads), "with a pointer end of ",pointer
+
+
+# We can calculate the range of items to put in the window on the data 
+
+# If the number of data items read < windowsize
+
+# The range is: 
+# start to datasize
+
+# If the number of data items read > windowsize
+
+# The range is: 
+# skipstart-windowsize to skipstart + windowsize
+
+# If the number of data items read > windowsize and skipstart > windowsize
+
+# The range is: 
+# skipstart-windowsize to datasize + 0 to windowsize - displayed items
+                         
 def logasjson(skipbase):
-    outputcount = 0
-    basecounter = 0
-    reads = []
-    writes = []
-    global currmsg,currstatus
-    global allreads,allwrites
-    global fakingit
-    global fakeseconds
-    global lastseconds
-    windowsize = 150
+     global currmsg,currstatus
+     global allreads,allwrites
+     global reads,writes
+     windowsize = 100
+     reads = []
+     writes = []
 
-    skipstart = skipbase - windowsize
+     datasize = len(allreads)
 
-    if len(allreads) > 0:
-          skipstart = (skipbase % len(allreads))
+# Base calculation, either we display all records from 0 to datasize
+# or we display from the skip point to end of the data
 
-#    print "Starting data output at ",skipstart
+     if datasize > 0:
+           currstatus = 'Showing live data'
+           currmsg = 'Showing live data'
+     if skipbase > datasize:
+           currstatus = 'Showing live data'
+           currmsg = 'Showing live data'
 
-    od = collections.OrderedDict(sorted(allreads.items()))
+# Not enough data, just display what we have
 
-    for rec in od.iteritems():
-          basecounter = basecounter+1
-          if (len(allreads) > windowsize):
-                if basecounter <= skipstart:
-                      continue
-          (seconds,readval) = rec
-          if not fakingit:
-                fakeseconds = seconds
-          reads.append([(fakeseconds*1000),allreads[seconds]])
-          writes.append([(fakeseconds*1000),allwrites[seconds]])
-          if fakingit:
-                fakeseconds = fakeseconds + 2
-          outputcount = outputcount+1
-          if outputcount >= windowsize:
-                break
+     if (datasize < windowsize):
+           populatedata(0,datasize)
+     elif (datasize >= windowsize):
+           skipstart = skipbase
+           if (skipbase >= datasize):
+                 skipstart = (skipbase % datasize)
+           populatedata(skipstart,(skipstart+windowsize))
+           if (len(reads) <= windowsize): 
+                 populatedata(0,(windowsize - len(reads)))
 
-    if (currstatus == 'active'):
-          if (outputcount > 0):
-                currmsg = 'Live data showing'
+     baseseconds = 0
+     counter = 0
+     datalength = len(reads)
 
-# If the output count starts reducing from the windowsize
-# We fake the output by just looping round the material again, but 
-# update the display status to show that the stats are cached, rather
-# than new information
+     while(counter < datalength):
+           if baseseconds == 0:
+                 baseseconds = reads[counter][0] + int(skipbase/windowsize)*(windowsize*2)
+           reads[counter][0] = baseseconds*1000
+           writes[counter][0] = baseseconds*1000
+           counter = counter + 1
+           baseseconds = baseseconds +2
 
-#    print "End of initial, total records: %d, outputcount: %d, windowsize: %d, skipstart: %d"%(len(allreads),outputcount,windowsize,skipstart)
+     datalength = len(reads)
+     print "Records in output: ",datalength, " , should be ",windowsize
 
-    if ((outputcount < windowsize) and
-        (skipstart > windowsize)):
-          print "Warning: We gotta loop the info round again, starting at ",lastseconds
-          currmsg = 'Cached data showing'
-          fakingit = 1
+     counter = -windowsize
+     if (datalength > 0):
+           counter = (datalength - windowsize)
 
-          for rec in od.iteritems():
-                (seconds,readval) = rec
-
-# If we're going round again, we're automatically into fake second territory
-
-                reads.append([(fakeseconds*1000),allreads[seconds]])
-                writes.append([(fakeseconds*1000),allwrites[seconds]])
-                fakeseconds = fakeseconds + 2
-                fakesecdiff = seconds
-                outputcount = outputcount+1
-                if outputcount >= windowsize:
-                      break
-
-#    print "Records in output: ",len(reads)
-
-    return json.dumps({'reads': reads, 
-                       'writes': writes, 
-                       'counter': outputcount, 
-                       'hostname' : activehostname,
-                       'status' : currstatus,
-                       'datastatus': currmsg})
+     return json.dumps({'reads': reads, 
+                        'writes': writes, 
+                        'counter': counter,
+                        'hostname' : activehostname,
+                        'status' : currstatus,
+                        'datastatus': currmsg})
 
 class BristleWeb(SimpleHTTPRequestHandler):
       mimetypes.init()
