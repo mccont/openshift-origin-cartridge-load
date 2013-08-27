@@ -3,13 +3,13 @@
 .status { width: 45%; padding: 5px; color:white; display: inline-block; vertical-align: top; }
 .statusmsg { display: inline-block; } 
 
-.inlinediv { display: block; }
+.inlinediv { display: block; height: auto; padding-bottom: 2px;}
 
-.inlinediv label { display: inline-block; width: 160px; }
+div.inlinediv label { display: inline-block; width: 180px; padding-right: 20px; line-height: 1em; padding-bottom: 0px; font-weight: bold;}
 
-.inlinevarblock label { display: inline-block; width: 100px; }
+.inlinevarblock label { display: inline; padding-right: 20px; }
 
-.inlinediv input { display: inline-block; }
+.inlinediv input { display: inline; padding: 0px; margin-bottom: 0px;}
 
 #controldialog {
 width: 450px;
@@ -31,7 +31,7 @@ text-align: right;
 
 .sliderblock { 
 width: 450px;
-margin-bottom: 15px;
+margin-bottom: 5px;
 }
 
 .sliderblock label {
@@ -47,9 +47,9 @@ display: inline-block;
 
 .advancedbutton { 
 margin-top: 15px;
-margin-bottom: 15px;
+margin-bottom: 5px;
 }
 
-#controlform .inlinediv label { 
-width: 200px;
+#controldialog #controlform input[type="text"], #controlform input[type="number"], #controlform input[type="password"] {
+  width: 200px;  margin-bottom: 2px; padding: 2px; line-height: 1em; height: 1.5em;
 }

@@ -1,38 +1,60 @@
 var skipstart = 0;
 var iteration = 0;
+var debugmode = 0;
+
+function getdebug() { 
+    if ($('#debug').is(':checked')) {
+        debugmode = 1;
+    } else {
+        debugmode = 0;
+    }
+}
 
 function refresh() {
 
     url = '?m=load&skip=' + skipstart + '&_=' + iteration++;
 
-    $.getJSON(url, function(data, textStatus, jqxhr) {
-            //            console.log(new Date() + " Loaded data " + data.counter + " :"+ textStatus + " " + jqxhr.status);
-
-            $('#loadmessage').html(data.datastatus);
-            $('#hostmessage').html(data.hostname);
-
-            if (data.status === 'error') {
+    $.getJSON(url, '')
+        .done(function(data) {
+                $('#loadmessage').html(data.currmsg);
+                $('#hostmessage').html(data.hostname);
+                
+                if (data.status === 'error') {
+                    stoprefresh();
+                    return;
+                }
+                
+                if (data.counter == 0) {
+                    skipstart++;
+                }
+                
+                var m4_read_a={data: data.reads, color: '#ffffff', label: 'Reads'};
+                var m4_write_a={data: data.writes, color: '#3399FF', label: 'Writes'};
+                var plot1=[m4_read_a,m4_write_a,];
+                var options1 = {
+                    xaxis: { mode: "time", ticks: 6, timeformat: "%H:%M:%S", color: "#cd1f2b", tickColor: "#cd1f2b", font: "color #cd1f2b" },
+                    yaxis: { min: 0, color: "#cd1f2b", tickColor: "#cd1f2b", font: "color #cd1f2b" },
+                    grid: { hoverable: true, clickable: true, aboveData: false, color: "#cd1f2b" },
+                    legend: { position: "sw", backgroundOpacity: 0, margin: 4, color: "#cd1f2b"  }
+                };
+                
+                $.plot($("#plot1"),plot1, options1);
+                
+                getdebug();
+                
+                if (debugmode) {
+                    data.reads = '';
+                    data.writes = '';
+                    $('#loadmessage').html(JSON.stringify(data));
+                }
+                
+                refreshtimer = setTimeout(refresh, 2000);
+            })
+        .fail(function(data) {
+                $('#loadmessage').html("Error: Couldn't contact host");
+                $('#hostmessage').html('');
                 stoprefresh();
-                return;
-            }
-
-            if (data.counter == 0) {
-                skipstart++;
-            }
-
-            var m4_read_a={data: data.reads, color: '#ffffff', label: 'Reads'};
-            var m4_write_a={data: data.writes, color: '#3399FF', label: 'Writes'};
-            var plot1=[m4_read_a,m4_write_a,];
-            var options1 = {
-                xaxis: { mode: "time", ticks: 6, timeformat: "%H:%M:%S", color: "#cd1f2b", tickColor: "#cd1f2b", font: "color #cd1f2b" },
-                yaxis: { min: 0, color: "#cd1f2b", tickColor: "#cd1f2b", font: "color #cd1f2b" },
-                grid: { hoverable: true, clickable: true, aboveData: false, color: "#cd1f2b" },
-                legend: { position: "sw", backgroundOpacity: 0, margin: 4, color: "#cd1f2b"  }
-	    };
-
-            $.plot($("#plot1"),plot1, options1);
-            refreshtimer = setTimeout(refresh, 2000);
-        });
+            });
 }
 
 function stoprefresh() {
@@ -53,6 +75,7 @@ function stopload() {
 
 function startload() {
 
+    stoprefresh();
     skipstart = 0;
     iteration = 0;
 
@@ -80,7 +103,7 @@ function startload() {
             console.log(new Date() + " Load Started: " + textStatus + " " + jqxhr.msg); //success
             $('#loadmessage').html('Waiting for data load to start');
         });
-    refresh();
+    refreshtimer = setTimeout(refresh, 2000);
 }
 
 $(document).ready(function() { 

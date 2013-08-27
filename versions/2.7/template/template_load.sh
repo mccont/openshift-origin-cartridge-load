@@ -1,20 +1,24 @@
-#!/bin/bash
+#!/bin/bash +e
 
 rm -f current.log create.log
 
-ps -ef|grep bristlecone.evaluator|grep -v grep|awk '{ print $2; }'| xargs kill -n 9
-
 {
-    echo "Removing old databases"
+    echo "STATUS: Removing old databases"
 
     mysql --connect-timeout=15 -h @@REALHOST@@ -u @@USER@@ -p@@PASSWORD@@ -P @@HOSTPORT@@ -e 'DROP DATABASE IF EXISTS evaluator' 
+
+    echo "STATUS: Creating new databases"
+
     mysql --connect-timeout=15 -h @@REALHOST@@ -u @@USER@@ -p@@PASSWORD@@ -P @@HOSTPORT@@ -e 'CREATE DATABASE evaluator'
     
     echo "STATUS: Initializing databases"
     ./bristlecone/bin/evaluator_tungsten.sh create_tables.xml
     
-    echo "STATUS: Starting Bristlecone"
-    ./bristlecone/bin/evaluator_tungsten.sh load_config.xml
+    while true
+    do
+        echo "STATUS: Starting Bristlecone"
+        ./bristlecone/bin/evaluator_tungsten.sh load_config.xml
+    done
     
     wait
 } >current.log 2>&1

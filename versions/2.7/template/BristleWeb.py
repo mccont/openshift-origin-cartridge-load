@@ -12,6 +12,7 @@ import stat
 
 child_processes = []
 
+windowsize = 100
 allreads = {}
 allwrites = {}
 reads = []
@@ -19,6 +20,7 @@ writes = []
 counter = 0
 records = 0
 lastseconds = 0
+runcount = 0
 currmsg = ''
 currstatus = 'idle'
 runstatus = ''
@@ -168,6 +170,8 @@ def parselog():
     global currstatus
     global runstatus
     global lastseconds
+    global runcount
+    global windowsize
     currmsg = 'Starting...'
     currstatus = 'active'
 
@@ -185,6 +189,7 @@ def parselog():
     lastseconds = 0
 
     linesprocessed = 0
+    runcount = 0
 
     for line in f:
           if re.search(r"Can't connect to MySQL server",line):
@@ -194,9 +199,14 @@ def parselog():
                 return
 
           if re.search(r"Test run complete",line):
+                currstatus = 'finished'
+                runcount = runcount + 1
                 if (lastseconds != 0):
                       del(allreads[lastseconds])
                       del(allwrites[lastseconds])
+                if (len(allreads) > 0): 
+                      if (windowsize > len(allreads)):
+                            windowsize = int(len(allreads)/2)
 
           match = re.search(r"STATUS:\s+(.*)",line)
           if (match):
@@ -223,7 +233,13 @@ def parselog():
                     reads = int(float(selects))
                     writes = int(float(updates) + float(deletes) + float(inserts))
                     realtime = re.match(r'\d+\s+INFO\s+(\d+)',time)
+
+                    currstatus = 'active'
+                    currmsg = 'Showing live data'
                 
+                    if (runcount > 2):
+                          currmsg = 'Showing live data (iteration %d)'%(runcount)
+
                     seconds = int(int(realtime.group(1))/1000)
                 
                     if seconds in allreads:
@@ -247,8 +263,6 @@ def populatedata(start,stop):
       global allreads,allwrites
       global reads,writes
 
-#      print "      Asked to populate data from %d to %d"%(start,stop)
-
       pointer = -1
 
       od = collections.OrderedDict(sorted(allreads.items()))
@@ -263,9 +277,6 @@ def populatedata(start,stop):
             (seconds,value) = rec
             reads.append([seconds,allreads[seconds]])
             writes.append([seconds,allwrites[seconds]])
-
-#      print "      Records appended into tables:",len(reads), "with a pointer end of ",pointer
-
 
 # We can calculate the range of items to put in the window on the data 
 
@@ -288,7 +299,7 @@ def logasjson(skipbase):
      global currmsg,currstatus
      global allreads,allwrites
      global reads,writes
-     windowsize = 100
+     global windowsize
      reads = []
      writes = []
 
@@ -297,20 +308,13 @@ def logasjson(skipbase):
 # Base calculation, either we display all records from 0 to datasize
 # or we display from the skip point to end of the data
 
-     if datasize > 0:
-           currstatus = 'Showing live data'
-           currmsg = 'Showing live data'
-     if skipbase > datasize:
-           currstatus = 'Showing live data'
-           currmsg = 'Showing live data'
-
 # Not enough data, just display what we have
 
      if (datasize < windowsize):
            populatedata(0,datasize)
      elif (datasize >= windowsize):
-           skipstart = skipbase
-           if (skipbase >= datasize):
+           skipstart = (datasize-windowsize)
+           if (skipbase >= datasize) and  (datasize > 0):
                  skipstart = (skipbase % datasize)
            populatedata(skipstart,(skipstart+windowsize))
            if (len(reads) <= windowsize): 
@@ -322,7 +326,7 @@ def logasjson(skipbase):
 
      while(counter < datalength):
            if baseseconds == 0:
-                 baseseconds = reads[counter][0] + int(skipbase/windowsize)*(windowsize*2)
+                 baseseconds = reads[counter][0] + int(skipbase/windowsize)*(windowsize)
            reads[counter][0] = baseseconds*1000
            writes[counter][0] = baseseconds*1000
 
@@ -330,24 +334,27 @@ def logasjson(skipbase):
            baseseconds = baseseconds +1
 
      datalength = len(reads)
-     print "Records in output: ",datalength, " , should be ",windowsize
+#     print "Records in output: ",datalength, " , should be ",windowsize
 
      counter = -windowsize
      if (datalength > 0):
            counter = (datalength - windowsize)
 
-     return json.dumps({'reads': reads, 
-                        'writes': writes, 
+     return json.dumps({'reads' : reads, 
+                        'writes' : writes, 
                         'counter': counter,
+                        'records' : datalength,
+                        'windowsize' : windowsize,
                         'hostname' : activehostname,
                         'status' : currstatus,
-                        'datastatus': currmsg})
+                        'currmsg' : currmsg})
 
 class BristleWeb(SimpleHTTPRequestHandler):
+      global allreads,allwrites
+      global windowsize
       mimetypes.init()
       counter = 0
       records = {}
-      global allreads,allwrites
 
       def do_GET(self):
           parsed_path = urlparse.urlparse(self.path)
@@ -376,6 +383,7 @@ class BristleWeb(SimpleHTTPRequestHandler):
                    self.wfile.write(logasjson(int(qs['skip'][0])))
 
              if qs['m'] == ['start']:
+                   windowsize = 100
                    try: 
                          os.remove('current.log')
                    except:
@@ -393,24 +401,26 @@ class BristleWeb(SimpleHTTPRequestHandler):
 
                    fakingit = 0
 
-#                   print "Starting load..."
 # First rewrite the execution script
                    parsefile('template_load.sh','start_load.sh',vars)
                    os.chmod('start_load.sh',stat.S_IRWXG|stat.S_IRWXU|stat.S_IRWXO)
+
 # Now rewrite the configuration file to initialize
                    parsefile('template_create.xml','create_tables.xml',vars)
+
 # Now rewrite the configuration file to run
                    write_bc_config('load_config.xml',vars)
 
+                   print "Stopped any existing loads"
+                   os.system('./stop_load.sh')
 
 # We fork the process that runs bristlecone
-                   print "Starting an external process with the data"
                    print "Starting a load for %s@%s on %s" % (vars['conn']['user'],vars['conn']['password'],vars['conn']['host'])
-
                    
                    child_pid = os.fork()
                    if child_pid == 0:
                          os.execl('start_load.sh','load_tester');
+                         print "Started load test script"
                    else:
                          child_processes.append(child_pid)
                          self.send_response(200)

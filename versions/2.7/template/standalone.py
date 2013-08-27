@@ -4,6 +4,7 @@ import SocketServer
 from BristleWeb import *
 import socket
 import time
+import os
 
 port = 8000
 
@@ -22,6 +23,8 @@ while(1):
    except NameError as e:
        print "Some other exception occurred: ",e
    except:
+       os.system("./stop_load.sh")
+       os.wait()
        print "Some other exception occurred: ",sys.exc_info()[0]
        time.sleep(30)
        pass
