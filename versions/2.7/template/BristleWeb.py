@@ -9,6 +9,7 @@ import mimetypes
 import json
 import collections
 import stat
+from time import *
 
 child_processes = []
 
@@ -48,28 +49,28 @@ coreconfig = { 'core' : { 'testDuration' : 1200,
                           'password' : 'secret',
                           },
                'tabgroup' : { 'name' : 'ta',
-                              'size' : 100,
+                              'size' : 1000,
                               'dataSource' : 's1',
                               },
                'thrgrouprw' : { 'name' : 'A',
                                 'dataSource' : 's2',
-                                'threadCount' : 10,
-                                'thinkTime' : 10,
-                                'updates' : 50,
+                                'threadCount' : 150,
+                                'thinkTime' : 100,
+                                'updates' : 60,
                                 'deletes' : 0,
                                 'inserts' : 0,
-                                'readSize' : 1,
-                                'rampUpInterval' : 5,
-                                'rampUpIncrement' : 5,
+                                'readSize' : 10,
+                                'rampUpInterval' : 1,
+                                'rampUpIncrement' : 100,
                                 'reconnectInterval' : 10,
                                 },
                'thrgroupro' : { 'name' : 'B',
                                 'dataSource' : 's1',
-                                'threadCount' : 30,
-                                'thinkTime' : 10,
-                                'readSize' : 1,
-                                'rampUpInterval' : 5,
-                                'rampUpIncrement' : 5,
+                                'threadCount' : 330,
+                                'thinkTime' : 200,
+                                'readSize' : 1000,
+                                'rampUpInterval' : 1,
+                                'rampUpIncrement' : 150,
                                 'reconnectInterval' : 10,
                                 },
                }
@@ -241,7 +242,7 @@ def parselog():
                           currmsg = 'Showing live data (iteration %d)'%(runcount)
 
                     seconds = int(int(realtime.group(1))/1000)
-                
+
                     if seconds in allreads:
                           linesprocessed = linesprocessed + 1
                           allreads[seconds] += reads
@@ -253,11 +254,13 @@ def parselog():
 
                     lastseconds = seconds
 
+#    print "Loaded seconds from logfile: ",lastseconds
+#    print "Got ",strftime("%H:%M:%S",localtime(lastseconds))
+
 # If the test run has completed, then the last line is actually a summary
 # line and it needs to be ignored
 
 # Extract a window of data using start/end points
-
 
 def populatedata(start,stop):
       global allreads,allwrites
@@ -275,8 +278,8 @@ def populatedata(start,stop):
             if (pointer >= stop):
                   break
             (seconds,value) = rec
-            reads.append([seconds,allreads[seconds]])
-            writes.append([seconds,allwrites[seconds]])
+            reads.append([seconds*1000,allreads[seconds]])
+            writes.append([seconds*1000,allwrites[seconds]])
 
 # We can calculate the range of items to put in the window on the data 
 
@@ -313,37 +316,12 @@ def logasjson(skipbase):
      if (datasize < windowsize):
            populatedata(0,datasize)
      elif (datasize >= windowsize):
-           skipstart = (datasize-windowsize)
-           if (skipbase >= datasize) and  (datasize > 0):
-                 skipstart = (skipbase % datasize)
-           populatedata(skipstart,(skipstart+windowsize))
-           if (len(reads) <= windowsize): 
-                 populatedata(0,(windowsize - len(reads)))
-
-     baseseconds = 0
-     counter = 0
-     datalength = len(reads)
-
-     while(counter < datalength):
-           if baseseconds == 0:
-                 baseseconds = reads[counter][0] + int(skipbase/windowsize)*(windowsize)
-           reads[counter][0] = baseseconds*1000
-           writes[counter][0] = baseseconds*1000
-
-           counter = counter + 1
-           baseseconds = baseseconds +1
-
-     datalength = len(reads)
-#     print "Records in output: ",datalength, " , should be ",windowsize
-
-     counter = -windowsize
-     if (datalength > 0):
-           counter = (datalength - windowsize)
+           populatedata((datasize-windowsize),datasize)
 
      return json.dumps({'reads' : reads, 
                         'writes' : writes, 
-                        'counter': counter,
-                        'records' : datalength,
+                        'datainlog' : len(allreads),
+                        'dataingraph' : len(reads),
                         'windowsize' : windowsize,
                         'hostname' : activehostname,
                         'status' : currstatus,
