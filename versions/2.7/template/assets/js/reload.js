@@ -1,6 +1,7 @@
 var skipstart = 0;
 var iteration = 0;
 var debugmode = 0;
+var baseconfig;
 
 function getdebug() { 
     if ($('#debug').is(':checked')) {
@@ -32,11 +33,20 @@ function refresh() {
                 var m4_write_a={data: data.writes, color: '#3399FF', label: 'Writes'};
                 var plot1=[m4_read_a,m4_write_a,];
                 var options1 = {
-                    xaxis: { mode: "time", ticks: 6, timeformat: "%H:%M:%S", color: "#cd1f2b", tickColor: "#cd1f2b", font: "color #cd1f2b" },
-                    yaxis: { min: 0, color: "#cd1f2b", tickColor: "#cd1f2b", font: "color #cd1f2b" },
-                    grid: { hoverable: true, clickable: true, aboveData: false, color: "#cd1f2b" },
-                    legend: { position: "sw", backgroundOpacity: 0, margin: 4, color: "#cd1f2b"  }
+                    xaxis: { mode: "time", ticks: 6, timeformat: "%H:%M:%S", color: "#888888", tickColor: "#888888", font: "color #888888" },
+                    yaxis: { min: 0, color: "#888888", tickColor: "#888888", font: "color #888888" },
+                    grid: { hoverable: true, clickable: true, aboveData: false, color: "#888888" },
+                    legend: { position: "sw", backgroundOpacity: 0, margin: 4, color: "#888888"  }
                 };
+
+                if (localStorage.theme == 'theme-openshift') {
+                    options1 = {
+                        xaxis: { mode: "time", ticks: 6, timeformat: "%H:%M:%S", color: "#cd1f2b", tickColor: "#cd1f2b", font: "color #cd1f2b" },
+                        yaxis: { min: 0, color: "#cd1f2b", tickColor: "#cd1f2b", font: "color #cd1f2b" },
+                        grid: { hoverable: true, clickable: true, aboveData: false, color: "#cd1f2b" },
+                        legend: { position: "sw", backgroundOpacity: 0, margin: 4, color: "#cd1f2b"  }
+                    };
+                }
                 
                 $.plot($("#plot1"),plot1, options1);
                 
@@ -79,23 +89,15 @@ function startload() {
     skipstart = 0;
     iteration = 0;
 
-    vars = { 'conn' : { 'host' : $('#host').val(),
-                        'user' : $('#user').val(),
-                        'password' : $('#password').val(),
-        },
-             'connections' : $('#connections').val(),
-             'rosettings' : { 'threadCount' :  $('#rthreads').html(),
-                              'readSize' : $('#rreadsize').val(),
-                 },
-             'rwsettings' : { 'threadCount' :  $('#wthreads').html(),
-                              'readSize' : $('#wreadsize').val(),
-                              'inserts' : $('#winserts').val(),
-                              'deletes' : $('#wdeletes').val(),
-                              'updates' : $('#wupdates').val(),
-                 },
-             'core' : { 'testDuration' : $('#duration').val(),
-             },
-    };
+    vars = baseconfig;
+
+    $("input[type=text]").each(function() {
+            args = $(this).attr('id').split("_");
+            vars[args[1]][args[2]] = $(this).val();
+            console.log('Updated vars ' + args[1] + ' - ' + args[2] + ' to ' + $(this).val());
+        });
+
+    vars['connections'] = $('#connections').val();
 
     url = '?m=start&vars=' + encodeURIComponent(JSON.stringify(vars));
 
@@ -114,6 +116,16 @@ $(document).ready(function() {
             search = /([^&=]+)=?([^&]*)/g,
             decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
             query  = window.location.search.substring(1);
+
+            $.getJSON('config.json', function(data) { 
+                    baseconfig = data;
+                    $.each(data,function(basekey, baseval) {
+                            $.each(baseval,function(key,val) { 
+                                    controlvalue = '#config_' + basekey + '_' + key;
+                                    $(controlvalue).val(val);
+                                });
+                        });
+                });
             
             urlParams = {};
             while (match = search.exec(query)) {
@@ -130,31 +142,6 @@ $(document).ready(function() {
                                                                                    });
                 });
             
-            $(function() {
-                    $( "#sliderrthreads" ).slider({
-                            range: "min",
-                                min: 1,
-                                max: 330,
-                                value: 330,
-                                slide: function( event, ui ) {
-                                $( "#rthreads" ).html( ui.value );
-                            }
-                        });
-                    $( "#rthreads" ).html($( "#sliderrthreads" ).slider( "value" ) );
-                });
-
-            $(function() {
-                    $( "#sliderwthreads" ).slider({
-                            range: "min",
-                                value: 150,
-                                min: 1,
-                                max: 300,
-                                slide: function( event, ui ) {
-                                $( "#wthreads" ).html( ui.value );
-                            }
-                        });
-                    $( "#wthreads" ).html( $( "#sliderwthreads" ).slider( "value" ) );
-                });
 
             var paramlist = new Array('user','host','password',
                                       'connections',

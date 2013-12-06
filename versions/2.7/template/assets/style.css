@@ -20,15 +20,6 @@ display: none;
 width: 450px;
 }
 
-#wthreads, #rthreads { 
-width: 80px;
-maxwidth: 80px;
-padding-right: 10px;
-minwidth: 80px;
-display: inline;
-text-align: right; 
-}
-
 .sliderblock { 
 width: 450px;
 margin-bottom: 5px;
@@ -50,6 +41,12 @@ margin-top: 15px;
 margin-bottom: 5px;
 }
 
-#controldialog #controlform input[type="text"], #controlform input[type="number"], #controlform input[type="password"] {
-  width: 200px;  margin-bottom: 2px; padding: 2px; line-height: 1em; height: 1.5em;
+#controldialog #controlform input[type="text"], 
+#controldialog #controlform input[type="password"] 
+#controldialog #controlform input[type="number"] {
+  width: 200px;  
+  margin-bottom: 2px; 
+  padding: 2px; 
+  line-height: 1em; 
+  height: 1.5em;
 }

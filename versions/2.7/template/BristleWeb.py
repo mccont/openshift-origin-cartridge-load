@@ -29,62 +29,16 @@ activehostname = 'No active process'
 fakingit = 0
 fakeseconds = 0
 
-coreconfig = { 'core' : { 'testDuration' : 1200,
-                          'autoCommit': 'false',
-                          'statusInterval': 500,
-                          'csvFile': "results.out",
-                          'separator' : ',',
-                          'name' : 'dynamic',
-                          },
-               'connback' : {'urlprefix' : 'jdbc:mysql://',
-                             'urlsuffixrw' : '/evaluator@qos=RW_STRICT&amp;createDatabaseIfNotExist=true&amp;autoReconnect=true',
-                             'urlsuffixro' : '/evaluator@qos=RO_RELAXED&amp;autoReconnect=true',
-                             'host' : 'localhost:3306',
-                             },
-
-               'conn' : { 'name' : 's1',
-                          'driver' : 'com.mysql.jdbc.Driver',
-                          'url' : 'jdbc:mysql://localhost:3306/evaluator@qos=RO_RELAXED&amp;autoReconnect=true',
-                          'user' : 'tungsten',
-                          'password' : 'secret',
-                          },
-               'tabgroup' : { 'name' : 'ta',
-                              'size' : 1000,
-                              'dataSource' : 's1',
-                              },
-               'thrgrouprw' : { 'name' : 'A',
-                                'dataSource' : 's2',
-                                'threadCount' : 150,
-                                'thinkTime' : 100,
-                                'updates' : 60,
-                                'deletes' : 0,
-                                'inserts' : 0,
-                                'readSize' : 10,
-                                'rampUpInterval' : 1,
-                                'rampUpIncrement' : 100,
-                                'reconnectInterval' : 10,
-                                },
-               'thrgroupro' : { 'name' : 'B',
-                                'dataSource' : 's1',
-                                'threadCount' : 330,
-                                'thinkTime' : 200,
-                                'readSize' : 1000,
-                                'rampUpInterval' : 1,
-                                'rampUpIncrement' : 150,
-                                'reconnectInterval' : 10,
-                                },
-               }
-
 def parsefile(infile,outfile,vars):
       host = 'localhost:3306'
       user = 'app_user'
       password = 'password'
 
       if 'conn' in vars:
-            if 'host' in vars['conn']:
-                  host = vars['conn']['host']
-                  password = vars['conn']['password']
-                  user = vars['conn']['user']
+            if 'host' in vars['connbase']:
+                  host = vars['connbase']['host']
+                  password = vars['connbase']['password']
+                  user = vars['connbase']['user']
 
       (realhost,hostport) = host.split(':')
 
@@ -111,6 +65,7 @@ def writexml(tagname,coreattr,attributes,content):
       tag.write('<%s '%(tagname))
       for k,v in coreattr.iteritems():
             if k in attributes: 
+                  print "Writing value from attributes, not defaults: ",attributes[k]
                   tag.write('%s="%s" '%(k,str(attributes[k])))
             else:
                   tag.write('%s="%s" '%(k,str(v)))
@@ -121,45 +76,35 @@ def writexml(tagname,coreattr,attributes,content):
       return tag.getvalue();
 
 def write_bc_config(filename,vars):
+      json_data = open('config.json','r').read()
+      print json_data
+      coreconfig = json.loads(json_data)
       conf = open(filename,'w')
       conf.write('<!DOCTYPE EvaluatorConfiguration SYSTEM "file://../xml/evaluator.dtd">')
 
       connlist = ''
       
-      if 'conn' in vars: 
-            vars['conn']['url'] = coreconfig['connback']['urlprefix'] + vars['conn']['host'] + coreconfig['connback']['urlsuffixro']
-            connlist = writexml('DataSource',coreconfig['conn'],vars['conn'],None)
-      else:
-            connlist = writexml('DataSource',coreconfig['conn'],{'name' : 's1'},None)
-
-      if 'rosettings' in vars:
-            thgroups = writexml('ThreadGroup',coreconfig['thrgroupro'],vars['rosettings'],None)
-      else:
-            thgroups = writexml('ThreadGroup',coreconfig['thrgroupro'],coreconfig['thrgroupro'],None)
+      vars['connbase']['url'] = coreconfig['connback']['urlprefix'] + vars['connbase']['host'] + coreconfig['connback']['urlsuffixro']
+      connlist = writexml('DataSource',coreconfig['conn'],vars['connbase'],None)
+      thgroups = writexml('ThreadGroup',coreconfig['thrgroupro'],vars['thrgroupro'],None)
 
       if ('connections' in vars):
             if int(vars['connections']) == 2:
                   print "Writing a R/W connection"
                   newconn = {}
-                  if 'conn' in vars:
-                        newconn = vars['conn']
-                        newconn['url'] = coreconfig['connback']['urlprefix'] + vars['conn']['host'] + coreconfig['connback']['urlsuffixrw']
-                  else:
-                        newconn = coreconfig['conn']
-                        newconn['url'] = coreconfig['connback']['urlprefix'] + coreconfig['connback']['host'] + coreconfig['connback']['urlsuffixrw']
+                  newconn['url'] = coreconfig['connback']['urlprefix'] + vars['connbase']['host'] + coreconfig['connback']['urlsuffixrw']
+                  newconn['user'] = vars['connbase']['user'];
+                  newconn['password'] = vars['connbase']['password'];
                   newconn['name'] = 's2'
                   
                   connlist += writexml('DataSource',coreconfig['conn'],newconn,None)
 
-                  if 'rwsettings' in vars:
-                        thgroups += writexml('ThreadGroup',coreconfig['thrgrouprw'],vars['rwsettings'],None)
-                  else:
-                        thgroups += writexml('ThreadGroup',coreconfig['thrgrouprw'],coreconfig['thrgrouprw'],None)
+                  thgroups += writexml('ThreadGroup',coreconfig['thrgrouprw'],vars['thrgrouprw'],None)
 
       conf.write(writexml('EvaluatorConfiguration',
                           coreconfig['core'],vars['core'],
                           connlist + 
-                          writexml('TableGroup',coreconfig['tabgroup'],coreconfig['tabgroup'],
+                          writexml('TableGroup',coreconfig['tabgroup'],vars['tabgroup'],
                                    thgroups
                                    )
                           )
@@ -393,7 +338,7 @@ class BristleWeb(SimpleHTTPRequestHandler):
                    os.system('./stop_load.sh')
 
 # We fork the process that runs bristlecone
-                   print "Starting a load for %s@%s on %s" % (vars['conn']['user'],vars['conn']['password'],vars['conn']['host'])
+                   print "Starting a load for %s@%s on %s" % (vars['connbase']['user'],vars['connbase']['password'],vars['connbase']['host'])
                    
                    child_pid = os.fork()
                    if child_pid == 0:

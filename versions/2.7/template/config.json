@@ -1,0 +1,56 @@
+{
+    "connbase": {
+        "host": "192.168.2.20:3306", 
+        "password": "password", 
+        "user": "tungsten"
+   }, 
+   "conn" : { 
+        "name" : "s1",
+        "driver" : "com.mysql.jdbc.Driver",
+        "url" : "jdbc:mysql://localhost:3306/evaluator@qos=RO_RELAXED&amp;autoReconnect=true",
+        "password": "", 
+        "user": ""
+   },
+   "connback": {
+        "host": "localhost:3306",
+        "urlprefix": "jdbc:mysql://",
+        "urlsuffixro": "/evaluator@qos=RO_RELAXED&amp;autoReconnect=true",
+        "urlsuffixrw": "/evaluator@qos=RW_STRICT&amp;createDatabaseIfNotExist=true&amp;autoReconnect=true"
+    },
+    "core": {
+        "autoCommit": "false",
+        "csvFile": "results.out",
+        "name": "dynamic",
+        "separator": ",",
+        "statusInterval": 500,
+        "testDuration": 1200
+    },
+    "tabgroup": {
+        "dataSource": "s1",
+        "name": "ta",
+        "size": 1000
+    },
+    "thrgroupro": {
+        "dataSource": "s1",
+        "name": "B",
+        "rampUpIncrement": 150,
+        "rampUpInterval": 1,
+        "readSize": 1000,
+        "reconnectInterval": 10,
+        "thinkTime": 200,
+        "threadCount": 330
+    },
+    "thrgrouprw": {
+        "dataSource": "s2",
+        "deletes": 0,
+        "inserts": 0,
+        "name": "A",
+        "rampUpIncrement": 100,
+        "rampUpInterval": 1,
+        "readSize": 10,
+        "reconnectInterval": 10,
+        "thinkTime": 100,
+        "threadCount": 150,
+        "updates": 60
+    }
+}

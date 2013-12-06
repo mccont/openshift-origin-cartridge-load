@@ -26,25 +26,23 @@
       <div id="controlform" >
         <div class="inlinediv">
           <label for="host">Hostname</label>
-          <input id="host" name="host" type="text" width="60" value="192.168.2.20:9999"/>
+          <input id="config_connbase_host" name="config_connbase_host" type="text" width="60" />
         </div>
         <div class="inlinediv">
           <label for="host">Application User</label>
-          <input id="user" name="user" type="text" width="20" value="app_user"/>
+          <input id="config_connbase_user" name="config_connbase_user" type="text" width="20" />
         </div>
         <div class="inlinediv">
           <label for="host">Application Password</label>
-          <input id="password" name="password" type="text" width="20" value="password"/>
+          <input id="config_connbase_password" name="config_connbase_password" type="text" width="20" />
         </div>
-        <div class="sliderblock">
-          <label for="sliderrthreads">Read Threads:</label>
-          <div id="sliderrthreads"></div>
-          <div id="rthreads" style="margin-left:25px;">30</div>
+        <div class="inlinediv">
+          <label for="rthreads">Read Threads:</label>
+          <input id="config_thrgroupro_threadCount" name="config_thrgroupro_threadCount" type="text" />
         </div>
-        <div class="sliderblock">
-          <label for="sliderwthreads">Write Threads:</label>
-          <div id="sliderwthreads"></div>
-          <div id="wthreads" style="margin-left:25px;">10</div>
+        <div class="inlinediv">
+          <label for="wthreads">Write Threads:</label>
+          <input id="config_thrgrouprw_threadCount" name="config_thrgrouprw_threadCount" type="text" />
         </div>
         <div class="advancedbutton">          
           <a href="#" id="#shadvgroup" onclick="$('#advancedgroup').toggle();">Advanced Options</a>
@@ -57,29 +55,54 @@
               <option value="2" selected="true">Two Threads, Read-Write</option>
             </select>
           </div>
-          <div><label  style="display:inline" for="duration">Test Duration:</label>
-            <input id="duration" name="duration" type="text" width="5" maxsize="5" value="1200"  style="display:inline; width: 75px;"/> Seconds
+          <div><label  style="display:inline" for="core_testDuration">Test Duration:</label>
+            <input id="config_core_testDuration" name="config_core_testDuration" type="text" width="5" maxsize="5" style="display:inline; width: 75px;"/> Seconds
+          </div>
+          <div style="font-weight: bold; margin-top: 10px; margin-bottom: 10px;">Table Group</div>
+          <div><label  style="display:inline" for="config_tabgroup_size">Size:</label>
+            <input id="config_tabgroup_size" name="config_tabgroup_size" type="text" width="5" maxsize="5" style="display:inline; width: 75px;"/>
           </div>
           <div style="font-weight: bold; margin-top: 10px; margin-bottom: 10px;">Read Only Thread Settings</div>
-          <div><label  style="display:inline" for="rreadsize">Reads:</label>
-            <input id="rreadsize" name="rreadsize" type="text" width="5" maxsize="5" value="1"  style="display:inline; width: 75px;"/>
+          <div>
+            <label  style="display:inline" for="config_thrgroupro_readSize">Reads:</label>
+            <input id="config_thrgroupro_readSize" name="config_thrgroupro_readSize" type="text" width="5" maxsize="5" style="display:inline; width: 75px;"/>
+          </div>
+          <div class="inlinevarblock">
+            <label  style="display:inline" for="config_thrgroupro_rampUpInterval">Ramp Up Interval:</label>
+            <input id="config_thrgroupro_rampUpInterval" name="config_thrgroupro_rampUpInterval" type="text" width="5" maxsize="5" style="display:inline; width: 75px;"/>
+            <label  style="display:inline" for="config_thrgroupro_rampUpIncrement">Increment:</label>
+            <input id="config_thrgroupro_rampUpIncrement" name="config_thrgroupro_rampUpIncrement" type="text" width="5" maxsize="5" style="display:inline; width: 75px;"/>
+          </div>
+          <div class="inlinevarblock">
+            <label  style="display:inline" for="config_thrgroupro_thinkTime">Think Time:</label>
+            <input id="config_thrgroupro_thinkTime" name="config_thrgroupro_thinkTime" type="text" width="5" maxsize="5" style="display:inline; width: 75px;"/>
           </div>
           <div style="font-weight: bold; margin-top: 10px; margin-bottom: 10px;">Read/Write Thread Settings</div>
           <div class="inlinevarblock">
-            <label for="wreadsize">Reads:</label>
-            <input id="wreadsize" name="wreadsize" type="text" width="5" maxsize="5" value="1" style="width:75px;"/>
-            <label for="winserts">Inserts:</label>
-            <input id="winserts" name="winserts" type="text" width="5" maxsize="5" value="0" style="width:75px;"/>
+            <label for="config_thrgrouprw_readSize">Reads:</label>
+            <input id="config_thrgrouprw_readSize" name="config_thrgrouprw_readSize" type="text" width="5" maxsize="5"  style="width:75px;"/>
+            <label for="config_thrgrouprw_inserts">Inserts:</label>
+            <input id="config_thrgrouprw_inserts" name="config_thrgrouprw_inserts" type="text" width="5" maxsize="5"  style="width:75px;"/>
           </div>
           <div class="inlinevarblock">
-            <label for="wupdates">Updates:</label>
-            <input id="wupdates" name="wupdates" type="text" width="5" maxsize="5" value="50" style="width:75px;"/>
-            <label for="wdeletes">Deletes:</label>
-            <input id="wdeletes" name="wdeletes" type="text" width="5" maxsize="5" value="0" style="width:75px;"/>
+            <label for="config_thrgrouprw_updates">Updates:</label>
+            <input id="config_thrgrouprw_updates" name="config_thrgrouprw_updates" type="text" width="5" maxsize="5"  style="width:75px;"/>
+            <label for="config_thrgrouprw_deletes">Deletes:</label>
+            <input id="config_thrgrouprw_deletes" name="config_thrgrouprw_deletes" type="text" width="5" maxsize="5"  style="width:75px;"/>
+          </div>
+          <div class="inlinevarblock">
+            <label  style="display:inline" for="config_thrgrouprw_rampUpInterval">Ramp Up Interval:</label>
+            <input id="config_thrgrouprw_rampUpInterval" name="config_thrgrouprw_rampUpInterval" type="text" width="5" maxsize="5" style="display:inline; width: 75px;"/>
+            <label  style="display:inline" for="config_thrgrouprw_rampUpIncrement">Increment:</label>
+            <input id="config_thrgrouprw_rampUpIncrement" name="config_thrgrouprw_rampUpIncrement" type="text" width="5" maxsize="5" style="display:inline; width: 75px;"/>
+          </div>
+          <div class="inlinevarblock">
+            <label  style="display:inline" for="config_thrgrouprw_thinkTime">Think Time:</label>
+            <input id="config_thrgrouprw_thinkTime" name="config_thrgrouprw_thinkTime" type="text" width="5" maxsize="5" style="display:inline; width: 75px;"/>
           </div>
           <div class="inlinevarblock">
             <label for="debug">Debug Mode:</label>
-            <input id="debug" name="debug" type="checkbox" width="5" maxsize="5" value="1"/>
+            <input id="debug" name="debug" type="checkbox" width="5" maxsize="5" />
           </div>
         </div>
       </div>
