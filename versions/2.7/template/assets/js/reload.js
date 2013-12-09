@@ -110,6 +110,8 @@ function startload() {
 
 $(document).ready(function() { 
 
+        html.classList.add('theme-openshift');
+
         var urlParams;
         var match,
             pl     = /\+/g,  // Regex for replacing addition symbol with a space
