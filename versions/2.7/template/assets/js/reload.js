@@ -112,26 +112,52 @@ $(document).ready(function() {
         html.classList.add('theme-openshift');
 
         var urlParams;
-        var match,
-            pl     = /\+/g,  // Regex for replacing addition symbol with a space
-            search = /([^&=]+)=?([^&]*)/g,
-            decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
-            query  = window.location.search.substring(1);
+        var match;
+        var pl = /\+/g;
+        var search = /([^&=]+)=?([^&]*)/g;
+        var decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); };
+        var query  = window.location.search.substring(1);
 
-            $.getJSON('config.json', function(data) { 
-                    baseconfig = data;
-                    $.each(data,function(basekey, baseval) {
-                            $.each(baseval,function(key,val) { 
-                                    controlvalue = '#config_' + basekey + '_' + key;
-                                    $(controlvalue).val(val);
-                                });
-                        });
-                });
-            
-            urlParams = {};
-            while (match = search.exec(query)) {
-                urlParams[decode(match[1])] = decode(match[2]);
+        urlParams = {};
+        while (match = search.exec(query)) {
+            urlParams[decode(match[1])] = decode(match[2]);
+        }
+
+        $.getJSON('config.json', function(data) { 
+                baseconfig = data;
+                $.each(data,function(basekey, baseval) {
+                        $.each(baseval,function(key,val) { 
+                                controlvalue = '#config_' + basekey + '_' + key;
+                                $(controlvalue).val(val);
+                            });
+                    });
+            if (urlParams.user) {
+                $('#config_connbase_user').val(urlParams.user);
             }
+            if (urlParams.password)
+                $('#config_connbase_password').val(urlParams.password);
+            if (urlParams.host && urlParams.port) {
+                hoststring = urlParams.host + ':' + urlParams.port;
+                $('#config_connbase_host').val(hoststring);
+            } else if (urlParams.host) {
+                $('#config_connbase_host').val(urlParams.host + ':3306');
+            }
+            if (urlParams.connections)
+                $('#config_connections').val(urlParams.connections);
+            if (urlParams.rthreads)
+                $('#config_thrgroupro_threadCount').html(urlParams.rthreads);
+            if (urlParams.wthreads)
+                $('#config_thrgrouprw_threadCount').html(urlParams.wthreads);
+
+            if (urlParams.mode && urlParams.mode == 'start') {
+                startload();
+            }
+            if (urlParams.mode && urlParams.mode == 'refresh') {
+                refresh();
+            }
+
+            });
+        
             
             $("#logocontrol").click(function(){ $("#controldialog").dialog(
                                                                            {buttons: { "Start": function() { startload(); $(this).dialog("close"); },
@@ -143,32 +169,6 @@ $(document).ready(function() {
                                                                                    });
                 });
             
-
-            var paramlist = new Array('user','host','password',
-                                      'connections',
-                                      'rthreads','rreadsize',
-                                      'wthreads','wreadsize','winserts','wdeletes','wupdates',
-                                      'duration');
-
-            if (urlParams.user)
-                $('#user').val(urlParams.user);
-            if (urlParams.password)
-                $('#password').val(urlParams.password);
-            if (urlParams.host)
-                $('#host').val(urlParams.host);
-            if (urlParams.connections)
-                $('#connections').val(urlParams.connections);
-            if (urlParams.rthreads)
-                $('#rthreads').html(urlParams.rthreads);
-            if (urlParams.wthreads)
-                $('#wthreads').html(urlParams.wthreads);
-
-            if (urlParams.mode && urlParams.mode == 'start') {
-                startload();
-            }
-            if (urlParams.mode && urlParams.mode == 'refresh') {
-                refresh();
-            }
 
 
     });
