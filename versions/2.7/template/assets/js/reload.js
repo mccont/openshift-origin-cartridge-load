@@ -1,7 +1,7 @@
 var skipstart = 0;
 var iteration = 0;
 var debugmode = 0;
-var baseconfig;
+var refreshtimer;
 
 function getdebug() { 
     if ($('#debug').is(':checked')) {
@@ -68,10 +68,9 @@ function refresh() {
 }
 
 function stoprefresh() {
+    console.log('Stopping refresh');
     clearTimeout(refreshtimer);
 }
-
-var refreshtimer;
 
 function stopload() {
 
