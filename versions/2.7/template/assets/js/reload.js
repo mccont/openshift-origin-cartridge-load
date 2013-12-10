@@ -138,6 +138,7 @@ $(document).ready(function() {
                 $('#config_connbase_password').val(urlParams.password);
             if (urlParams.host && urlParams.port) {
                 hoststring = urlParams.host + ':' + urlParams.port;
+                console.log(hoststring);
                 $('#config_connbase_host').val(hoststring);
             } else if (urlParams.host) {
                 $('#config_connbase_host').val(urlParams.host + ':3306');
